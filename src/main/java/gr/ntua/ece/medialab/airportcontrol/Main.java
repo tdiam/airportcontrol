@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import gr.ntua.ece.medialab.airportcontrol.util.ResourceBundleWrapper;
+
 public class Main extends Application {
     private ResourceBundle bundle;
 
@@ -29,13 +31,13 @@ public class Main extends Application {
 
     private void loadRb() {
         bundle = ResourceBundle.getBundle("gr.ntua.ece.medialab.airportcontrol.bundle");
+        bundle = new ResourceBundleWrapper(bundle);
     }
 
     private Parent loadView() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(bundle);
-            return loader.load(getClass().getResource("main.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/main.fxml"), bundle);
+            return loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

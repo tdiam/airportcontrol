@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<MenuBar xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.Nav">
+    <Menu text="%nav.application">
+        <MenuItem text="%nav.start" />
+        <MenuItem text="%nav.load" />
+        <MenuItem text="%nav.exit" />
+    </Menu>
+    <Menu text="%nav.details">
+        <MenuItem text="%nav.gates" />
+        <MenuItem text="%nav.flights" />
+        <MenuItem text="%nav.delayed" />
+        <MenuItem text="%nav.holding" />
+        <MenuItem text="%nav.next_departures" />
+    </Menu>
+</MenuBar>
