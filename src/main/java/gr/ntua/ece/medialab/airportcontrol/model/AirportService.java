@@ -1,6 +1,8 @@
 package gr.ntua.ece.medialab.airportcontrol.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public enum AirportService {
     REFUEL,
@@ -17,5 +19,10 @@ public enum AirportService {
 
     public static double coefOf(AirportService value) {
         return (double) coefMap.get(value);
+    }
+    public static final HashSet<AirportService> ALL = new HashSet<>();
+
+    static {
+        ALL.addAll(List.of(REFUEL, CLEAN, PASSENGER_TRANSPORT, LOADING));
     }
 }

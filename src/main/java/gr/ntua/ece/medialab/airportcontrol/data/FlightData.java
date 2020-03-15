@@ -1,13 +1,17 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
-import gr.ntua.ece.medialab.airportcontrol.model.*;
+import gr.ntua.ece.medialab.airportcontrol.model.Flight;
+import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
+import gr.ntua.ece.medialab.airportcontrol.model.FlightType;
+import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public interface FlightData {
     String getScenarioDirPath();
@@ -39,7 +43,8 @@ public interface FlightData {
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 try {
-                    imported.put(values[0].trim(), arrayToFlight(values));
+                    Flight flight = arrayToFlight(values);
+                    imported.put(flight.id, flight);
                 } catch (NumberFormatException e) {
                     String msg = new StringBuilder().append(file).append(":").append(lineNum)
                             .append(" could not be parsed").toString();

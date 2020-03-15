@@ -8,7 +8,7 @@ public enum PlaneType {
     JET(3);
 
     private int value;
-    private static HashMap map = new HashMap<>();
+    private static HashMap<Integer, PlaneType> map = new HashMap<>();
 
     PlaneType(int value) {
         this.value = value;
@@ -21,10 +21,6 @@ public enum PlaneType {
     }
 
     public static PlaneType valueOf(int planeType) {
-        return (PlaneType) map.get(planeType);
-    }
-
-    public int getValue() {
-        return value;
+        return map.get(planeType);
     }
 }

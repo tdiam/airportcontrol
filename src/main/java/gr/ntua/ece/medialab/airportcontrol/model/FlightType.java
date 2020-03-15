@@ -23,8 +23,4 @@ public enum FlightType {
     public static FlightType valueOf(int flightType) {
         return (FlightType) map.get(flightType);
     }
-
-    public int getValue() {
-        return value;
-    }
 }
