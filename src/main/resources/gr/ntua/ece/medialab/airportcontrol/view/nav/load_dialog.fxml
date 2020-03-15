@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.nav.LoadDialog"
+        spacing="15">
+    <padding>
+        <Insets top="20" left="20" right="20" bottom="20" />
+    </padding>
+    <Label text="%nav.load.scenario_label" />
+    <TextField fx:id="scenarioField" promptText="%nav.load.scenario_prompt" onAction="#handleSubmit" />
+    <Label fx:id="error" text="%nav.load.scenario_error" visible="false" />
+    <Button text="%nav.load.submit" onAction="#handleSubmit" />
+</VBox>

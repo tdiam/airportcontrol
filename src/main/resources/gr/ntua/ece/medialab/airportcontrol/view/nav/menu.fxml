@@ -8,10 +8,10 @@
 
 <MenuBar xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
-        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.Nav">
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.nav.Menu">
     <Menu text="%nav.application">
         <MenuItem text="%nav.start" />
-        <MenuItem text="%nav.load" />
+        <MenuItem text="%nav.load" onAction="#showLoadDialog" />
         <MenuItem text="%nav.exit" />
     </Menu>
     <Menu text="%nav.details">
