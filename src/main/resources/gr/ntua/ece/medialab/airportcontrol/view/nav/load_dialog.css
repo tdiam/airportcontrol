@@ -1,3 +1,8 @@
+#loadDialog {
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
 #error {
     -fx-text-fill: red;
 }

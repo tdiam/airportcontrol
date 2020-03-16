@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class PopupDialog {
     private Stage stage;
 
-    public PopupDialog(String title, Parent view, String css) {
+    public PopupDialog(String title, Parent view) {
         stage = new Stage();
 
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -17,10 +17,6 @@ public class PopupDialog {
         stage.setMinWidth(250);
 
         Scene scene = new Scene(view);
-        if (css != null) {
-            scene.getStylesheets().add(css);
-        }
-
         // Close when user presses ESC
         scene.setOnKeyPressed(evt -> {
             if (evt.getCode() == KeyCode.ESCAPE) {

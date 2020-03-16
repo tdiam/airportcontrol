@@ -23,9 +23,8 @@ public class Menu implements Initializable {
     void showLoadDialog(Event evt) {
         String title = bundle.getString("nav.load.title");
         Parent view = loadView("load_dialog.fxml");
-        String css = getClass().getResource("load_dialog.css").toExternalForm();
 
-        new PopupDialog(title, view, css).show();
+        new PopupDialog(title, view).show();
     }
 
     private Parent loadView(String viewFile) {

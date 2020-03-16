@@ -6,11 +6,9 @@
 <?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
+        fx:id="loadDialog"
         fx:controller="gr.ntua.ece.medialab.airportcontrol.view.nav.LoadDialog"
-        spacing="15">
-    <padding>
-        <Insets top="20" left="20" right="20" bottom="20" />
-    </padding>
+        stylesheets="@load_dialog.css">
     <Label text="%nav.load.scenario_label" />
     <TextField fx:id="scenarioField" promptText="%nav.load.scenario_prompt" onAction="#handleSubmit" />
     <Label fx:id="error" text="%nav.load.scenario_error" visible="false" />
