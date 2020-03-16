@@ -1,0 +1,14 @@
+/**
+ * Statbar styles.
+ * Paddings are chosen to be the same as in menubar:
+ * https://gist.github.com/maxd/63691840fc372f22f470
+ */
+
+#statbar {
+    -fx-pref-height: 30;
+    -fx-padding: 0.0em 0.666667em 0.0em 0.666667em;
+}
+
+#statbar > * {
+    -fx-padding: 0.333em 0.5em 0.333em 0.5em;
+}
