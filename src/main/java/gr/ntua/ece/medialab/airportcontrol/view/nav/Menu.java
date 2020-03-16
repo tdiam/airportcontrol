@@ -1,5 +1,6 @@
 package gr.ntua.ece.medialab.airportcontrol.view.nav;
 
+import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.util.PopupDialog;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -12,11 +13,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Menu implements Initializable {
+    private Data data;
     private ResourceBundle bundle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
+        data = Data.getInstance();
     }
 
     @FXML
@@ -25,6 +28,11 @@ public class Menu implements Initializable {
         Parent view = loadView("load_dialog.fxml");
 
         new PopupDialog(title, view).show();
+    }
+
+    @FXML
+    void startTime() {
+        data.timeData().start();
     }
 
     private Parent loadView(String viewFile) {

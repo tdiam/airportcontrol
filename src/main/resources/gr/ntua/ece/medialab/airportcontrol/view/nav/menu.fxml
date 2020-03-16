@@ -10,7 +10,7 @@
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="gr.ntua.ece.medialab.airportcontrol.view.nav.Menu">
     <Menu text="%nav.application">
-        <MenuItem text="%nav.start" />
+        <MenuItem text="%nav.start" onAction="#startTime" />
         <MenuItem text="%nav.load" onAction="#showLoadDialog" />
         <MenuItem text="%nav.exit" />
     </Menu>
