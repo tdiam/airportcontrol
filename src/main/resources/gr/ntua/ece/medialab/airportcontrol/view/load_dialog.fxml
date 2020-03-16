@@ -7,7 +7,7 @@
 <VBox xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
         fx:id="loadDialog"
-        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.nav.LoadDialog"
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.LoadDialog"
         stylesheets="@load_dialog.css">
     <Label text="%nav.load.scenario_label" />
     <TextField fx:id="scenarioField" promptText="%nav.load.scenario_prompt" onAction="#handleSubmit" />

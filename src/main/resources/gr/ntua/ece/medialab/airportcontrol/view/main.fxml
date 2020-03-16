@@ -11,7 +11,7 @@
         fx:controller="gr.ntua.ece.medialab.airportcontrol.Main">
     <top>
         <VBox>
-            <fx:include fx:id="nav" source="nav/menu.fxml" resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
+            <fx:include fx:id="nav" source="menu.fxml" resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
             <fx:include fx:id="statbar" source="statbar.fxml" resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
         </VBox>
     </top>

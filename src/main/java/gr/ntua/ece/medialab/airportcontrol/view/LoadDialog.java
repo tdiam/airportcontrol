@@ -1,4 +1,4 @@
-package gr.ntua.ece.medialab.airportcontrol.view.nav;
+package gr.ntua.ece.medialab.airportcontrol.view;
 
 import static gr.ntua.ece.medialab.airportcontrol.util.EventUtil.getWindowFromEvent;
 

@@ -1,4 +1,4 @@
-package gr.ntua.ece.medialab.airportcontrol.view.nav;
+package gr.ntua.ece.medialab.airportcontrol.view;
 
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.util.PopupDialog;
