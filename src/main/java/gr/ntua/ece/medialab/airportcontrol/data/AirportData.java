@@ -10,13 +10,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-public interface AirportData {
-    String getScenarioDirPath();
-    ObservableMap<String, ParkingBase> getParkings();
-    void setParkings(ObservableMap<String, ParkingBase> parkings);
+public class AirportData {
+    private Data root;
+
+    AirportData(Data root) {
+        this.root = root;
+    }
+
+    private ObservableMap<String, ParkingBase> parkings = FXCollections.observableHashMap();
+
+    public ObservableMap<String, ParkingBase> getParkings() {
+        return parkings;
+    }
+
+    public void setParkings(ObservableMap<String, ParkingBase> parkings) {
+        this.parkings = parkings;
+    }
 
     private String airportScenarioToFile(String scenarioId) {
-        return new StringBuilder().append(getScenarioDirPath()).append("/")
+        return new StringBuilder().append(root.getScenarioDirPath()).append("/")
                 .append("airport_").append(scenarioId).append(".txt")
                 .toString();
     }
@@ -31,7 +43,7 @@ public interface AirportData {
         return ParkingType.createParking(parkingTypeIdx, id, costPerMinute);
     }
 
-    default void importAirport(String scenarioId) throws IOException {
+    public void importAirport(String scenarioId) throws IOException {
         String file = airportScenarioToFile(scenarioId);
         HashMap<String, ParkingBase> imported = new HashMap<>();
 

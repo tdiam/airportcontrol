@@ -13,13 +13,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public interface FlightData {
-    String getScenarioDirPath();
-    ObservableMap<String, Flight> getFlights();
-    void setFlights(ObservableMap<String, Flight> flights);
+public class FlightData {
+    private Data root;
+
+    FlightData(Data root) {
+        this.root = root;
+    }
+
+    private ObservableMap<String, Flight> flights = FXCollections.observableHashMap();
+
+    public ObservableMap<String, Flight> getFlights() {
+        return flights;
+    }
+
+    public void setFlights(ObservableMap<String, Flight> flights) {
+        this.flights = flights;
+    }
 
     private String flightScenarioToFile(String scenarioId) {
-        return new StringBuilder().append(getScenarioDirPath()).append("/")
+        return new StringBuilder().append(root.getScenarioDirPath()).append("/")
                 .append("setup_").append(scenarioId).append(".txt")
                 .toString();
     }
@@ -33,7 +45,7 @@ public interface FlightData {
         return new Flight(id, city, flightType, FlightStatus.HOLDING, planeType, new HashSet<>(), std);
     }
 
-    default void importSetup(String scenarioId) throws IOException {
+    public void importSetup(String scenarioId) throws IOException {
         String file = flightScenarioToFile(scenarioId);
         HashMap<String, Flight> imported = new HashMap<>();
 

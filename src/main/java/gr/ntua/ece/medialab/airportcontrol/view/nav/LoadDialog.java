@@ -25,8 +25,8 @@ public class LoadDialog {
         Data data = Data.getInstance();
         String scenarioId = scenarioField.getText();
         try {
-            data.importSetup(scenarioId);
-            data.importAirport(scenarioId);
+            data.flightData().importSetup(scenarioId);
+            data.airportData().importAirport(scenarioId);
             stage.close();
         } catch (IOException e) {
             // Scenario files do not exist

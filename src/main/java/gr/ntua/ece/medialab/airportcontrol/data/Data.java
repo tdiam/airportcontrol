@@ -1,19 +1,18 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
-import gr.ntua.ece.medialab.airportcontrol.model.Flight;
-import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
-
 import java.io.File;
 import java.io.IOException;
 
-public class Data implements FlightData, AirportData {
+public class Data {
     private static Data instance;
+    private static FlightData flightInstance;
+    private static AirportData airportInstance;
 
     public static Data getInstance() {
         if (instance == null) {
             instance = new Data();
+            flightInstance = new FlightData(instance);
+            airportInstance = new AirportData(instance);
         }
         return instance;
     }
@@ -26,26 +25,12 @@ public class Data implements FlightData, AirportData {
         }
     }
 
-    private ObservableMap<String, Flight> flights = FXCollections.observableHashMap();
-    private ObservableMap<String, ParkingBase> parkings = FXCollections.observableHashMap();
 
-    @Override
-    public ObservableMap<String, Flight> getFlights() {
-        return flights;
+    public FlightData flightData() {
+        return flightInstance;
     }
 
-    @Override
-    public void setFlights(ObservableMap<String, Flight> flights) {
-        this.flights = flights;
-    }
-
-    @Override
-    public ObservableMap<String, ParkingBase> getParkings() {
-        return parkings;
-    }
-
-    @Override
-    public void setParkings(ObservableMap<String, ParkingBase> parkings) {
-        this.parkings = parkings;
+    public AirportData airportData() {
+        return airportInstance;
     }
 }
