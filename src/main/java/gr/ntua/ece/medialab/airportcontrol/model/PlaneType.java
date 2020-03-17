@@ -23,4 +23,14 @@ public enum PlaneType {
     public static PlaneType valueOf(int planeType) {
         return map.get(planeType);
     }
+
+    private static HashMap<PlaneType, Integer> landingTimeMap = new HashMap<>() {{
+        put(SINGLE_ENGINE, 6);
+        put(TURBOPROP, 4);
+        put(JET, 2);
+    }};
+
+    public static int landingTimeOf(PlaneType value) {
+        return (int) landingTimeMap.get(value);
+    }
 }

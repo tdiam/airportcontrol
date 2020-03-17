@@ -10,7 +10,7 @@ public enum AirportService {
     PASSENGER_TRANSPORT,
     LOADING;
 
-    private static HashMap coefMap = new HashMap<AirportService, Double>() {{
+    private static HashMap<AirportService, Double> coefMap = new HashMap<>() {{
         put(REFUEL, 0.25);
         put(CLEAN, 0.02);
         put(PASSENGER_TRANSPORT, 0.02);
