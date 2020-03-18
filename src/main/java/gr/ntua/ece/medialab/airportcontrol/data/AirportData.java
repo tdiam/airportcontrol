@@ -2,6 +2,7 @@ package gr.ntua.ece.medialab.airportcontrol.data;
 
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -17,14 +18,11 @@ public class AirportData {
         this.root = root;
     }
 
-    private ObservableMap<String, ParkingBase> parkings = FXCollections.observableHashMap();
+    private SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkings = new SimpleObjectProperty<>(
+            FXCollections.observableHashMap());
 
-    public ObservableMap<String, ParkingBase> getParkings() {
+    public SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingsProperty() {
         return parkings;
-    }
-
-    public void setParkings(ObservableMap<String, ParkingBase> parkings) {
-        this.parkings = parkings;
     }
 
     private String airportScenarioToFile(String scenarioId) {
@@ -69,6 +67,6 @@ public class AirportData {
             }
         }
 
-        setParkings(FXCollections.observableMap(imported));
+        parkings.set(FXCollections.observableMap(imported));
     }
 }

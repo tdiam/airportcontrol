@@ -15,10 +15,10 @@
         <MenuItem text="%nav.exit" />
     </Menu>
     <Menu text="%nav.details">
-        <MenuItem text="%nav.gates" />
-        <MenuItem text="%nav.flights" />
-        <MenuItem text="%nav.delayed" />
-        <MenuItem text="%nav.holding" />
-        <MenuItem text="%nav.next_departures" />
+        <MenuItem text="%nav.gates" onAction="#showGatesDetails" />
+        <MenuItem text="%nav.flights" onAction="#showFlightsDetails" />
+        <MenuItem text="%nav.delayed" onAction="#showDelayedDetails" />
+        <MenuItem text="%nav.holding" onAction="#showHoldingDetails" />
+        <MenuItem text="%nav.next_departures" onAction="#showNextDeparturesDetails" />
     </Menu>
 </MenuBar>

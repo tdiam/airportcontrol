@@ -47,4 +47,10 @@ public class TimeData {
     public void stop() {
         scheduleHandler.cancel(true);
     }
+
+    public String minutesToHM(int minutes) {
+        int hours = minutes / 60;
+        minutes %= 60;
+        return String.format("%02d:%02d", hours, minutes);
+    }
 }

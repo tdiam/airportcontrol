@@ -22,18 +22,12 @@ public class Statbar implements Initializable {
         bindTotalTime();
     }
 
-    private String minutesToHM(int minutes) {
-        int hours = minutes / 60;
-        minutes %= 60;
-        return String.format("%02d:%02d", hours, minutes);
-    }
-
     private void bindTotalTime() {
         SimpleIntegerProperty prop = data.timeData().minutesSinceStartProperty();
 
-        totalTime.setText(minutesToHM(prop.get()));
+        totalTime.setText(data.timeData().minutesToHM(prop.get()));
         prop.addListener((obs, oldValue, newValue) -> {
-            totalTime.setText(minutesToHM((int)newValue));
+            totalTime.setText(data.timeData().minutesToHM((int)newValue));
         });
     }
 }
