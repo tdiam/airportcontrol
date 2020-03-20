@@ -74,6 +74,10 @@ public class Flight {
         this.planeType = planeType;
     }
 
+    public int getLandingTime() {
+        return PlaneType.landingTimeOf(planeType);
+    }
+
     public Set<AirportService> getExtraServices() {
         return extraServices;
     }
