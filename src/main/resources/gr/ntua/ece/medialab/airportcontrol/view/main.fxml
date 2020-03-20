@@ -8,7 +8,9 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
-        fx:controller="gr.ntua.ece.medialab.airportcontrol.Main">
+        fx:id="main"
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.Main"
+        stylesheets="@main.css">
     <top>
         <VBox>
             <fx:include fx:id="nav" source="menu.fxml" resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
