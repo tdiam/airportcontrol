@@ -3,7 +3,6 @@ package gr.ntua.ece.medialab.airportcontrol.view.details;
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
-import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingStatus;
 import gr.ntua.ece.medialab.airportcontrol.util.MapEntry;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -43,8 +42,8 @@ public class GatesDetails implements Initializable {
         TableColumn<MapEntry<String, ParkingBase>, String> statusColumn = new TableColumn<>(
                 bundle.getString("details.status_col.name"));
         statusColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            ParkingStatus status = df.getValue().getValue().getStatus();
-            return bundle.getString("parking_status." + status.name());
+            boolean isAvailable = df.getValue().getValue().isAvailable();
+            return bundle.getString("parking_status." + (isAvailable ? "AVAILABLE" : "OCCUPIED"));
         }));
 
         TableColumn<MapEntry<String, ParkingBase>, String> flightColumn = new TableColumn<>(

@@ -12,14 +12,12 @@ public class ParkingBase {
 
     private ParkingType type;
     public String id;
-    public ParkingStatus status;
     public double costPerMinute;
     public Flight parkedFlight;
 
     public ParkingBase(ParkingType type, String id, double costPerMinute) {
         this.type = type;
         this.id = id;
-        this.status = ParkingStatus.AVAILABLE;
         this.costPerMinute = costPerMinute;
     }
 
@@ -33,14 +31,6 @@ public class ParkingBase {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public ParkingStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ParkingStatus status) {
-        this.status = status;
     }
 
     public double getCostPerMinute() {
@@ -59,6 +49,10 @@ public class ParkingBase {
         this.parkedFlight = parkedFlight;
     }
 
+    public boolean isAvailable() {
+        return this.parkedFlight == null;
+    }
+
     public static boolean isAllowedFlightType(FlightType flightType) {
         throw new UnsupportedOperationException();
     }
@@ -73,5 +67,13 @@ public class ParkingBase {
 
     public static int maxStayMinutes() {
         throw new UnsupportedOperationException();
+    }
+
+    public boolean isGoodForFlight(Flight flight, int landingRequestTime) {
+        return isAvailable()
+                && isAllowedFlightType(flight.getFlightType())
+                && isAllowedPlaneType(flight.getPlaneType())
+                && hasServices(flight.getExtraServices())
+                && maxStayMinutes() >= flight.getStd() - landingRequestTime;
     }
 }
