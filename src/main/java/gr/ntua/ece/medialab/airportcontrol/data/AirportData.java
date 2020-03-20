@@ -11,9 +11,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Airport data controller. Data concerns the airport parking spots.
+ */
 public class AirportData {
     private Data root;
 
+    /**
+     * Creates a new instance of the airport data controller.
+     * @param root Reference to root controller.
+     */
     AirportData(Data root) {
         this.root = root;
     }
@@ -21,16 +28,32 @@ public class AirportData {
     private SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkings = new SimpleObjectProperty<>(
             FXCollections.observableHashMap());
 
+    /**
+     * Gets parking spots.
+     * @return Property that stores an observable map of parking spots with id-{@link ParkingBase} as key-value pairs.
+     */
     public SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingsProperty() {
         return parkings;
     }
 
+    /**
+     * Gets path of scenario file.
+     * @param scenarioId Scenario ID given as a string.
+     * @return Absolute path to input file for this scenario's airport data.
+     */
     private String airportScenarioToFile(String scenarioId) {
         return new StringBuilder().append(root.getScenarioDirPath()).append("/")
                 .append("airport_").append(scenarioId).append(".txt")
                 .toString();
     }
 
+    /**
+     * Creates {@link ParkingBase} instance from array of values as parsed from the scenario file.
+     * @param values Array of strings as parsed from the scenario file.
+     * @param idx Index of parking that will be used to create a unique ID.
+     * @return An instance of a subclass of {@link ParkingBase}, as determined by the parking type.
+     * @throws NumberFormatException If a string of numeric data is malformed.
+     */
     private ParkingBase arrayToParking(String[] values, int idx) throws NumberFormatException {
         int parkingTypeIdx = Integer.parseInt(values[0].trim());
         double costPerMinute = Double.parseDouble(values[2].trim());
@@ -41,6 +64,11 @@ public class AirportData {
         return ParkingType.createParking(parkingTypeIdx, id, costPerMinute);
     }
 
+    /**
+     * Given a scenario ID, it parses the input for the airport and stores the processed data.
+     * @param scenarioId String that identifies the input file with the scenario data.
+     * @throws IOException If reading the file fails.
+     */
     public void importAirport(String scenarioId) throws IOException {
         String file = airportScenarioToFile(scenarioId);
         HashMap<String, ParkingBase> imported = new HashMap<>();

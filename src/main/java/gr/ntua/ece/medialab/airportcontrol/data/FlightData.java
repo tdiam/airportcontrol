@@ -16,9 +16,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Flight data controller.
+ */
 public class FlightData {
     private Data root;
 
+    /**
+     * Creates a new instance of the flight data controller.
+     * @param root Reference to root controller.
+     */
     FlightData(Data root) {
         this.root = root;
     }
@@ -26,16 +33,31 @@ public class FlightData {
     private SimpleObjectProperty<ObservableMap<String, Flight>> flights = new SimpleObjectProperty<>(
             FXCollections.observableHashMap());
 
+    /**
+     * Gets active flights.
+     * @return Property that stores an observable map of active flights with id-{@link Flight} as key-value pairs.
+     */
     public SimpleObjectProperty<ObservableMap<String, Flight>> flightsProperty() {
         return flights;
     }
 
+    /**
+     * Gets path of scenario file.
+     * @param scenarioId Scenario ID given as a string.
+     * @return Absolute path to input file for this scenario's flight data.
+     */
     private String flightScenarioToFile(String scenarioId) {
         return new StringBuilder().append(root.getScenarioDirPath()).append("/")
                 .append("setup_").append(scenarioId).append(".txt")
                 .toString();
     }
 
+    /**
+     * Creates {@link Flight} instance from array of values as parsed from the scenario file.
+     * @param values Array of strings as parsed from the scenario file.
+     * @return A {@link Flight} instance.
+     * @throws NumberFormatException If a string of numeric data is malformed.
+     */
     private Flight arrayToFlight(String[] values) throws NumberFormatException {
         Flight flight = new Flight();
         flight.setId(values[0].trim());
@@ -49,6 +71,11 @@ public class FlightData {
         return flight;
     }
 
+    /**
+     * Given a scenario ID, it parses the input for flights and stores the processed data.
+     * @param scenarioId String that identifies the input file with the scenario data.
+     * @throws IOException If reading the file fails.
+     */
     public void importSetup(String scenarioId) throws IOException {
         String file = flightScenarioToFile(scenarioId);
         HashMap<String, Flight> imported = new HashMap<>();
@@ -74,7 +101,9 @@ public class FlightData {
     }
 
     /**
-     * Returns parked flights whose scheduled departure time has passed.
+     * Gets parked flights whose scheduled departure time has passed.
+     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
+     * @return A plain Map of the delayed flights.
      */
     public Map<String, Flight> getDelayedFlights(ObservableMap<String, Flight> flights) {
         return flights.entrySet().stream().filter(entry -> {
@@ -88,7 +117,9 @@ public class FlightData {
     }
 
     /**
-     * Returns flights with HOLDING status.
+     * Gets flights with HOLDING status.
+     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
+     * @return A plain Map of the holding flights.
      */
     public Map<String, Flight> getHoldingFlights(ObservableMap<String, Flight> flights) {
         return flights.entrySet().stream()
@@ -97,7 +128,9 @@ public class FlightData {
     }
 
     /**
-     * Returns the next departures, ie. flights with scheduled departure within 10 minutes from now.
+     * Gets the next departures, ie. flights with scheduled departure within 10 minutes from now.
+     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
+     * @return A plain Map of the flights that are departing next.
      */
     public Map<String, Flight> getNextDepartures(ObservableMap<String, Flight> flights) {
         // TODO: Make this a live list that updates with each clock tick.
