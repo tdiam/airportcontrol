@@ -1,8 +1,13 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
+import gr.ntua.ece.medialab.airportcontrol.model.Flight;
+import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
@@ -96,5 +101,43 @@ public class AirportData {
         }
 
         parkings.set(FXCollections.observableMap(imported));
+    }
+
+    /**
+     * Handles landing requests for flights.
+     *
+     * Searches parking for a requesting flight that meets the requirements.
+     * If found, the flight starts landing and the parking is assigned to it.
+     * Otherwise, the flight's status is set to HOLDING.
+     *
+     * @param flight Flight instance.
+     */
+    public void requestLanding(Flight flight) {
+        boolean accepted = false;
+        SimpleIntegerProperty timeProp = root.timeData().minutesSinceStartProperty();
+        int now = timeProp.get();
+        flight.setLandingRequestTime(now);
+        for (ParkingBase parking : parkings.get().values()) {
+            if (parking.isGoodForFlight(flight, now)) {
+                parking.setParkedFlight(flight);
+                flight.setParking(parking);
+                flight.setStatus(FlightStatus.LANDING);
+                timeProp.addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> obs, Number oldValue, Number newValue) {
+                        if ((int)newValue >= now + flight.getLandingTime()) {
+                            flight.setStatus(FlightStatus.PARKED);
+                            timeProp.removeListener(this);
+                        }
+                    }
+                });
+                accepted = true;
+                break;
+            }
+        }
+
+        if (!accepted) {
+            flight.setStatus(FlightStatus.HOLDING);
+        }
     }
 }
