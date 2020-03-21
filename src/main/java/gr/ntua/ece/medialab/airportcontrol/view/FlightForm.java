@@ -83,6 +83,11 @@ public class FlightForm implements Initializable {
         servicesField.getSelectionModel().clearSelection();
     }
 
+    public void clearAll() {
+        idField.clear();
+        clearServicesField();
+    }
+
     private Flight validate() throws Errors.FlightFormValidationError {
         Flight flight = data.flightData().flightsProperty().get().get(idField.getText());
 
@@ -103,8 +108,10 @@ public class FlightForm implements Initializable {
             Flight flight = validate();
             flight.extraServicesProperty().set(Set.copyOf(servicesField.getSelectionModel().getSelectedItems()));
             data.airportData().requestLanding(flight);
-            //if (flight.getStatus()) Stage dialog = new PopupDialog("", null);
+            // TODO: if (flight.getStatus()) Stage dialog = new PopupDialog("", null);
+            clearAll();
         } catch (Errors.FlightFormValidationError e) {
+            // TODO: Handle error gracefully
             System.err.println(e.getMessage());
         }
     }
