@@ -94,7 +94,7 @@ public class FlightsDetails implements Initializable {
                     () -> {
                         ParkingBase parking = df.getValue().getValue().parkingProperty().get();
                         if (parking == null) return "";
-                        return parking.getId();
+                        return parking.idProperty().get();
                     },
                     df.getValue().getValue().parkingProperty()
                 ));

@@ -37,30 +37,46 @@ public class GatesDetails implements Initializable {
     private void bindParkings() {
         TableColumn<MapEntry<String, ParkingBase>, String> idColumn = new TableColumn<>(
                 bundle.getString("details.id_col.name"));
-        idColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> df.getValue().getKey()));
+        idColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> df.getValue().getValue().idProperty().get(),
+                    df.getValue().getValue().idProperty()
+                ));
 
         TableColumn<MapEntry<String, ParkingBase>, String> statusColumn = new TableColumn<>(
                 bundle.getString("details.status_col.name"));
-        statusColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            boolean isAvailable = df.getValue().getValue().isAvailable();
-            return bundle.getString("parking_status." + (isAvailable ? "AVAILABLE" : "OCCUPIED"));
-        }));
+        statusColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        boolean isAvailable = df.getValue().getValue().isAvailableProperty().get();
+                        return bundle.getString("parking_status." + (isAvailable ? "AVAILABLE" : "OCCUPIED"));
+                    },
+                    df.getValue().getValue().isAvailableProperty()
+                ));
 
         TableColumn<MapEntry<String, ParkingBase>, String> flightColumn = new TableColumn<>(
                 bundle.getString("details.flight_col.name"));
-        flightColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            Flight flight = df.getValue().getValue().getParkedFlight();
-            if (flight == null) return "";
-            return flight.idProperty().get();
-        }));
+        flightColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        Flight flight = df.getValue().getValue().parkedFlightProperty().get();
+                        if (flight == null) return "";
+                        return flight.idProperty().get();
+                    },
+                    df.getValue().getValue().parkedFlightProperty()
+                ));
 
         TableColumn<MapEntry<String, ParkingBase>, String> stdColumn = new TableColumn<>(
                 bundle.getString("details.std_col.name"));
-        stdColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            Flight flight = df.getValue().getValue().getParkedFlight();
-            if (flight == null) return "";
-            return data.timeData().minutesToHM(flight.stdProperty().get());
-        }));
+        stdColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        Flight flight = df.getValue().getValue().parkedFlightProperty().get();
+                        if (flight == null) return "";
+                        return data.timeData().minutesToHM(flight.stdProperty().get());
+                    },
+                    df.getValue().getValue().parkedFlightProperty()
+                ));
 
         table.getColumns().setAll(idColumn, statusColumn, flightColumn, stdColumn);
 

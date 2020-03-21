@@ -89,7 +89,7 @@ public class AirportData {
                     // Create n copies
                     for (int idx = 0; idx < n; ++idx) {
                         ParkingBase parking = arrayToParking(values, idx);
-                        imported.put(parking.getId(), parking);
+                        imported.put(parking.idProperty().get(), parking);
                     }
                 } catch (NumberFormatException e) {
                     String msg = new StringBuilder().append(file).append(":").append(lineNum)
@@ -119,7 +119,7 @@ public class AirportData {
         flight.landingRequestTimeProperty().set(now);
         for (ParkingBase parking : parkings.get().values()) {
             if (parking.isGoodForFlight(flight, now)) {
-                parking.setParkedFlight(flight);
+                parking.parkedFlightProperty().set(flight);
                 flight.parkingProperty().set(parking);
                 flight.statusProperty().set(FlightStatus.LANDING);
                 timeProp.addListener(new ChangeListener<Number>() {

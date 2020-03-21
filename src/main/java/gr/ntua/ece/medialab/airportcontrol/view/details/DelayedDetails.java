@@ -42,74 +42,68 @@ public class DelayedDetails implements Initializable {
     private void bindFlights() {
         TableColumn<MapEntry<String, Flight>, String> parkingColumn = new TableColumn<>(
                 bundle.getString("details.parking_col.name"));
-        parkingColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            ParkingBase parking = df.getValue().getValue().parkingProperty().get();
-            // NOTE: Data consistency is assumed (status=holding therefore parking is not null)
-            return parking.getId();
-        }));
+        parkingColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        ParkingBase parking = df.getValue().getValue().parkingProperty().get();
+                        // NOTE: Data consistency is assumed (status=holding therefore parking is not null)
+                        return parking.idProperty().get();
+                    },
+                    df.getValue().getValue().parkingProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> idColumn = new TableColumn<>(
                 bundle.getString("details.id_col.name"));
-        idColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> df.getValue().getKey()));
+        idColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> df.getValue().getValue().idProperty().get(),
+                    df.getValue().getValue().idProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> flightTypeColumn = new TableColumn<>(
                 bundle.getString("details.flight_type_col.name"));
-        flightTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
-            return bundle.getString("flight_type." + flightType.toString());
-        }));
+        flightTypeColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
+                        return bundle.getString("flight_type." + flightType.toString());
+                    },
+                    df.getValue().getValue().flightTypeProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> planeTypeColumn = new TableColumn<>(
                 bundle.getString("details.plane_type_col.name"));
-        planeTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
-            return bundle.getString("plane_type." + planeType.toString());
-        }));
+        planeTypeColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
+                        return bundle.getString("plane_type." + planeType.toString());
+                    },
+                    df.getValue().getValue().planeTypeProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> stdColumn = new TableColumn<>(
                 bundle.getString("details.std_col.name"));
-        stdColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            int std = df.getValue().getValue().stdProperty().get();
-            return data.timeData().minutesToHM(std);
-        }));
+        stdColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        int std = df.getValue().getValue().stdProperty().get();
+                        return data.timeData().minutesToHM(std);
+                    },
+                    df.getValue().getValue().stdProperty()
+                ));
 
         table.getColumns().setAll(parkingColumn, idColumn, flightTypeColumn, planeTypeColumn, stdColumn);
 
-        SimpleObjectProperty<ObservableMap<String, Flight>> prop = data.flightData().flightsProperty();
-        prop.addListener((obs, oldValue, newValue) -> {
-            Map<String, Flight> delayed = data.flightData().getDelayedFlights(newValue);
+        SimpleObjectProperty<ObservableMap<String, Flight>> flights = data.flightData().flightsProperty();
+        data.timeData().minutesSinceStartProperty().addListener((obs, oldValue, newValue) -> {
+            Map<String, Flight> delayed = data.flightData().getDelayedFlights(flights.get());
             entries = FXCollections.observableArrayList(MapEntry.mapToMapEntryArrayList(delayed));
-            newValue.addListener(this::flightsListener);
             table.setItems(entries);
         });
 
-        Map<String, Flight> delayed = data.flightData().getDelayedFlights(prop.get());
+        Map<String, Flight> delayed = data.flightData().getDelayedFlights(flights.get());
         entries = FXCollections.observableArrayList(MapEntry.mapToMapEntryArrayList(delayed));
-        prop.get().addListener(this::flightsListener);
         table.setItems(entries);
-    }
-
-    /**
-     * Adapted from:
-     * https://stackoverflow.com/a/38490212
-     */
-    private void flightsListener(MapChangeListener.Change<? extends String, ? extends Flight> change) {
-        boolean removed = change.wasRemoved();
-        if (removed != change.wasAdded()) {
-            if (removed) {
-                // no put for existing key
-                // remove pair completely
-                entries.remove(new MapEntry<>(change.getKey(), (Flight) null));
-            } else {
-                // add new entry
-                entries.add(new MapEntry<>(change.getKey(), change.getValueAdded()));
-            }
-        } else {
-            // replace existing entry
-            MapEntry<String, Flight> entry = new MapEntry<>(change.getKey(), change.getValueAdded());
-
-            int index = entries.indexOf(entry);
-            entries.set(index, entry);
-        }
     }
 }

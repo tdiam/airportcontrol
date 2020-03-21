@@ -40,28 +40,44 @@ public class HoldingDetails implements Initializable {
     private void bindFlights() {
         TableColumn<MapEntry<String, Flight>, String> idColumn = new TableColumn<>(
                 bundle.getString("details.id_col.name"));
-        idColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> df.getValue().getKey()));
+        idColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> df.getValue().getValue().idProperty().get(),
+                    df.getValue().getValue().idProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> flightTypeColumn = new TableColumn<>(
                 bundle.getString("details.flight_type_col.name"));
-        flightTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
-            return bundle.getString("flight_type." + flightType.toString());
-        }));
+        flightTypeColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
+                        return bundle.getString("flight_type." + flightType.toString());
+                    },
+                    df.getValue().getValue().flightTypeProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> planeTypeColumn = new TableColumn<>(
                 bundle.getString("details.plane_type_col.name"));
-        planeTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
-            return bundle.getString("plane_type." + planeType.toString());
-        }));
+        planeTypeColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
+                        return bundle.getString("plane_type." + planeType.toString());
+                    },
+                    df.getValue().getValue().planeTypeProperty()
+                ));
 
         TableColumn<MapEntry<String, Flight>, String> landingRequestTimeColumn = new TableColumn<>(
                 bundle.getString("details.landing_request_col.name"));
-        landingRequestTimeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            int landingRequestTime = df.getValue().getValue().landingRequestTimeProperty().get();
-            return data.timeData().minutesToHM(landingRequestTime);
-        }));
+        landingRequestTimeColumn.setCellValueFactory(df ->
+                Bindings.createStringBinding(
+                    () -> {
+                        int landingRequestTime = df.getValue().getValue().landingRequestTimeProperty().get();
+                        return data.timeData().minutesToHM(landingRequestTime);
+                    },
+                    df.getValue().getValue().landingRequestTimeProperty()
+                ));
 
         table.getColumns().setAll(idColumn, flightTypeColumn, planeTypeColumn, landingRequestTimeColumn);
 
