@@ -19,6 +19,9 @@
     </top>
     <center>
         <GridPane>
+            <fx:include fx:id="parkingDashboard" source="parkingDashboard.fxml"
+                        GridPane.rowIndex="0" GridPane.columnIndex="0"
+                        resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
             <fx:include fx:id="flightForm" source="flightForm.fxml"
                         GridPane.rowIndex="0" GridPane.columnIndex="1"
                         resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
