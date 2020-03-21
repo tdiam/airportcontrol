@@ -140,7 +140,8 @@ public class FlightData {
             if (flight.getStatus() != FlightStatus.PARKED) return false;
 
             // scheduled time <= 10 minutes from now
-            return flight.getStd() <= root.timeData().minutesSinceStartProperty().get() + 10;
+            int fromNow = flight.getStd() - root.timeData().minutesSinceStartProperty().get();
+            return fromNow >= 0 && fromNow <= 10;
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
