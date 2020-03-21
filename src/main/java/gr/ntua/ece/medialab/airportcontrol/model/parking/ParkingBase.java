@@ -7,18 +7,20 @@ import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
 
 import java.util.Set;
 
-public class ParkingBase {
-    public static Set<AirportService> supportedServices;
-
+public abstract class ParkingBase {
     private ParkingType type;
-    public String id;
-    public double costPerMinute;
-    public Flight parkedFlight;
+    private String id;
+    private double costPerMinute;
+    private Flight parkedFlight;
+    private Set<AirportService> supportedServices;
 
-    public ParkingBase(ParkingType type, String id, double costPerMinute) {
+    public ParkingBase(ParkingType type, String id, double costPerMinute, Flight parkedFlight,
+            Set<AirportService> supportedServices) {
         this.type = type;
         this.id = id;
         this.costPerMinute = costPerMinute;
+        this.parkedFlight = parkedFlight;
+        this.supportedServices = supportedServices;
     }
 
     public ParkingType getType() {
@@ -50,23 +52,11 @@ public class ParkingBase {
     }
 
     public boolean isAvailable() {
-        return this.parkedFlight == null;
+        return parkedFlight == null;
     }
 
-    public static boolean isAllowedFlightType(FlightType flightType) {
-        throw new UnsupportedOperationException();
-    }
-
-    public static boolean isAllowedPlaneType(PlaneType planeType) {
-        throw new UnsupportedOperationException();
-    }
-
-    public static boolean hasServices(Set<AirportService> services) {
+    public boolean hasServices(Set<AirportService> services) {
         return supportedServices.containsAll(services);
-    }
-
-    public static int maxStayMinutes() {
-        throw new UnsupportedOperationException();
     }
 
     public boolean isGoodForFlight(Flight flight, int landingRequestTime) {
@@ -76,4 +66,10 @@ public class ParkingBase {
                 && hasServices(flight.getExtraServices())
                 && maxStayMinutes() >= flight.getStd() - landingRequestTime;
     }
+
+    public abstract boolean isAllowedFlightType(FlightType flightType);
+
+    public abstract boolean isAllowedPlaneType(PlaneType planeType);
+
+    public abstract int maxStayMinutes();
 }

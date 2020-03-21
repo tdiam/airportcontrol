@@ -6,27 +6,24 @@ import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ParkingGeneral extends ParkingBase {
-    public static Set<AirportService> supportedServices = new HashSet<>(
-            List.of(AirportService.REFUEL, AirportService.CLEAN));
-
     public ParkingGeneral(ParkingType type, String id, double costPerMinute) {
-        super(type, id, costPerMinute);
+        super(type, id, costPerMinute, null, new HashSet<>(
+                List.of(AirportService.REFUEL, AirportService.CLEAN)));
     }
 
-    public static boolean isAllowedFlightType(FlightType flightType) {
+    public boolean isAllowedFlightType(FlightType flightType) {
         // Allow all
         return true;
     }
 
-    public static boolean isAllowedPlaneType(PlaneType planeType) {
+    public boolean isAllowedPlaneType(PlaneType planeType) {
         // Allow all
         return true;
     }
 
-    public static int maxStayMinutes() {
+    public int maxStayMinutes() {
         return 4 * 60;
     }
 }
