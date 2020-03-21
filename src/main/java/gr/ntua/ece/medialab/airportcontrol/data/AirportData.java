@@ -74,7 +74,7 @@ public class AirportData {
         int parkingTypeIdx = Integer.parseInt(values[0].trim());
         double costPerMinute = Double.parseDouble(values[2].trim());
         // id = parking type letter + increment, e.g. G1, G2, G3...
-        String id = new StringBuilder().append(values[3].trim()).append(idx + 1).toString();
+        String id = String.format("%s%03d", values[3].trim(), idx + 1);
 
         // Use factory
         return ParkingType.createParking(parkingTypeIdx, id, costPerMinute);
