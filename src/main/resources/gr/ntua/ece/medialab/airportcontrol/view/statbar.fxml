@@ -14,15 +14,19 @@
         stylesheets="@statbar.css">
     <HBox GridPane.columnIndex="0" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.landing_flights" /><Label text=": " />
+        <Label fx:id="landingFlights" />
     </HBox>
     <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.available_parkings" /><Label text=": " />
+        <Label fx:id="availableParkings" />
     </HBox>
     <HBox GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.departing_soon" /><Label text=": " />
+        <Label fx:id="departingSoon" />
     </HBox>
     <HBox GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.gross_total" /><Label text=": " />
+        <Label fx:id="grossTotal" />
     </HBox>
     <HBox GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.total_time" /><Label text=": " />
