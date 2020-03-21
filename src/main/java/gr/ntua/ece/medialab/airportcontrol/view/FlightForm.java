@@ -9,12 +9,16 @@ import gr.ntua.ece.medialab.airportcontrol.util.PopupDialog;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -108,11 +112,50 @@ public class FlightForm implements Initializable {
             Flight flight = validate();
             flight.extraServicesProperty().set(Set.copyOf(servicesField.getSelectionModel().getSelectedItems()));
             data.airportData().requestLanding(flight);
-            // TODO: if (flight.getStatus()) Stage dialog = new PopupDialog("", null);
+
+            FlightStatus newStatus = flight.statusProperty().get();
+            if (newStatus == FlightStatus.LANDING) {
+                showLandingDialog(flight);
+            } else if (newStatus == FlightStatus.HOLDING) {
+                showHoldingDialog(flight);
+            }
             clearAll();
         } catch (Errors.FlightFormValidationError e) {
-            // TODO: Handle error gracefully
-            System.err.println(e.getMessage());
+            showErrorDialog(e.getMessage());
         }
+    }
+
+    private void showLandingDialog(Flight flight) {
+        String id = flight.idProperty().get();
+        String title = bundle.getString("flight_form.dialog.title");
+        String message = String.format(bundle.getString("flight_form.dialog.landing_message"), id,
+                flight.parkingProperty().get().idProperty().get());
+        showDialog(title, message);
+    }
+
+    private void showHoldingDialog(Flight flight) {
+        String id = flight.idProperty().get();
+        String title = bundle.getString("flight_form.dialog.title");
+        String message = String.format(bundle.getString("flight_form.dialog.holding_message"), id);
+        showDialog(title, message);
+    }
+
+    private void showErrorDialog(String message) {
+        String title = bundle.getString("flight_form.dialog.error.title");
+        showDialog(title, message);
+    }
+
+    private void showDialog(String title, String message) {
+        int DIALOG_WIDTH = 320;
+        Label label = new Label(message);
+        label.setPadding(new Insets(15));
+        label.setMaxWidth(DIALOG_WIDTH);
+        label.setWrapText(true);
+        PopupDialog dialog = new PopupDialog(title, label);
+        Stage stage = dialog.getStage();
+        stage.setWidth(DIALOG_WIDTH);
+        stage.setMinHeight(60);
+        dialog.show();
+        stage.centerOnScreen();
     }
 }
