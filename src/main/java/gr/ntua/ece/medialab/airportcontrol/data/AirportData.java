@@ -89,7 +89,7 @@ public class AirportData {
                     // Create n copies
                     for (int idx = 0; idx < n; ++idx) {
                         ParkingBase parking = arrayToParking(values, idx);
-                        imported.put(parking.id, parking);
+                        imported.put(parking.getId(), parking);
                     }
                 } catch (NumberFormatException e) {
                     String msg = new StringBuilder().append(file).append(":").append(lineNum)
