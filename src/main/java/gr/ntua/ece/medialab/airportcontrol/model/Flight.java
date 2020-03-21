@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Set;
 
-public class Flight {
+public class Flight implements Comparable<Flight> {
     private SimpleStringProperty id = new SimpleStringProperty();
     private SimpleStringProperty city = new SimpleStringProperty();
     private SimpleObjectProperty<FlightType> flightType = new SimpleObjectProperty<>();
@@ -68,5 +68,10 @@ public class Flight {
 
     public double getServicesTotalCoef() {
         return extraServices.get().stream().mapToDouble(AirportService::coefOf).sum();
+    }
+
+    @Override
+    public int compareTo(Flight other) {
+        return idProperty().get().compareTo(other.idProperty().get());
     }
 }

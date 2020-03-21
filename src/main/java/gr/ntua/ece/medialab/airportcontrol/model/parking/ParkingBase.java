@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Set;
 
-public abstract class ParkingBase {
+public abstract class ParkingBase implements Comparable<ParkingBase> {
     private SimpleObjectProperty<ParkingType> type = new SimpleObjectProperty<>();
     private SimpleStringProperty id = new SimpleStringProperty();
     private SimpleDoubleProperty costPerMinute = new SimpleDoubleProperty();
@@ -75,4 +75,9 @@ public abstract class ParkingBase {
     public abstract boolean isAllowedPlaneType(PlaneType planeType);
 
     public abstract int maxStayMinutes();
+
+    @Override
+    public int compareTo(ParkingBase other) {
+        return idProperty().get().compareTo(other.idProperty().get());
+    }
 }
