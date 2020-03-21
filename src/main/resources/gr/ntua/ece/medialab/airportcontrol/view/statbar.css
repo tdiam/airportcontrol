@@ -5,6 +5,7 @@
  */
 
 #statbar {
+    -fx-background-color: #E7E7E7;
     -fx-padding: 0.0em 0.666667em 0.0em 0.666667em;
 }
 

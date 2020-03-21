@@ -17,4 +17,18 @@
             <fx:include fx:id="statbar" source="statbar.fxml" resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
         </VBox>
     </top>
+    <center>
+        <GridPane>
+            <fx:include fx:id="flightForm" source="flightForm.fxml"
+                        GridPane.rowIndex="0" GridPane.columnIndex="1"
+                        resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="75.0" />
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" />
+            </rowConstraints>
+        </GridPane>
+    </center>
 </BorderPane>

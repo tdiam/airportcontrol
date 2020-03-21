@@ -1,0 +1,13 @@
+#flightForm {
+    -fx-background-color: #FAFAFA;
+    -fx-padding: 30;
+    -fx-spacing: 30;
+}
+
+#flightForm > * {
+    -fx-spacing: 10;
+}
+
+#servicesField {
+    -fx-pref-height: 120;
+}

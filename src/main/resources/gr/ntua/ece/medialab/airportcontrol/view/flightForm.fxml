@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:id="flightForm"
+        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.FlightForm"
+        stylesheets="@flightForm.css">
+    <VBox>
+        <Label text="%flight_form.id_label" />
+        <TextField fx:id="idField" promptText="%flight_form.id_prompt"  />
+    </VBox>
+    <VBox>
+        <Label text="%flight_form.services_label" />
+        <ListView fx:id="servicesField" />
+        <Button fx:id="clearServicesBtn" onAction="#clearServicesField" text="%flight_form.clear" />
+    </VBox>
+    <Button fx:id="submitBtn" onAction="#submit" text="%flight_form.submit" />
+</VBox>
