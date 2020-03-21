@@ -16,6 +16,7 @@ public class Flight {
     private SimpleObjectProperty<PlaneType> planeType = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Set<AirportService>> extraServices = new SimpleObjectProperty<>();
     private SimpleIntegerProperty landingRequestTime = new SimpleIntegerProperty();
+    private SimpleIntegerProperty parkedTime = new SimpleIntegerProperty();
     private SimpleIntegerProperty std = new SimpleIntegerProperty();
 
     public Flight() {
@@ -53,11 +54,19 @@ public class Flight {
         return landingRequestTime;
     }
 
+    public SimpleIntegerProperty parkedTimeProperty() {
+        return parkedTime;
+    }
+
     public SimpleIntegerProperty stdProperty() {
         return std;
     }
 
     public int getLandingTime() {
         return PlaneType.landingTimeOf(planeType.get());
+    }
+
+    public double getServicesTotalCoef() {
+        return extraServices.get().stream().mapToDouble(AirportService::coefOf).sum();
     }
 }

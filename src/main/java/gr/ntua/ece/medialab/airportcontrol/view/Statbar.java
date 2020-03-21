@@ -4,6 +4,7 @@ import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.MapChangeListener;
@@ -19,6 +20,7 @@ public class Statbar implements Initializable {
     private Data data;
     SimpleObjectProperty<ObservableMap<String, Flight>> flightsProperty;
     SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingsProperty;
+    SimpleDoubleProperty grossTotalProperty;
 
     @FXML
     private Label landingFlights;
@@ -41,10 +43,12 @@ public class Statbar implements Initializable {
         data = Data.getInstance();
         flightsProperty = data.flightData().flightsProperty();
         parkingsProperty = data.airportData().parkingsProperty();
+        grossTotalProperty = data.airportData().grossTotalProperty();
 
         bindLandingFlights();
         bindAvailableParkings();
         bindNextDepartures();
+        bindGrossTotal();
         bindTotalTime();
     }
 
@@ -124,6 +128,16 @@ public class Statbar implements Initializable {
     private void updateNextDepartures() {
         int num = data.flightData().getNextDepartures(flightsProperty.get()).size();
         departingSoon.setText(Integer.toString(num));
+    }
+
+    private void bindGrossTotal() {
+        updateGrossTotal();
+        grossTotalProperty.addListener((obs, oldValue, newValue) -> updateGrossTotal());
+    }
+
+    private void updateGrossTotal() {
+        double num = grossTotalProperty.get();
+        grossTotal.setText(String.format("%.2f", num));
     }
 
     private void bindTotalTime() {

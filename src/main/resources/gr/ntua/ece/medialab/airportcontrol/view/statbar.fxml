@@ -26,7 +26,7 @@
     </HBox>
     <HBox GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.gross_total" /><Label text=": " />
-        <Label fx:id="grossTotal" />
+        <Label fx:id="grossTotal" /><Label text="&#8364;" />
     </HBox>
     <HBox GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
         <Label text="%statbar.total_time" /><Label text=": " />

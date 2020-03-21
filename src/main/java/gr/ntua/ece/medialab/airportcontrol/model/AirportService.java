@@ -18,7 +18,7 @@ public enum AirportService {
     }};
 
     public static double coefOf(AirportService value) {
-        return (double) coefMap.get(value);
+        return coefMap.get(value);
     }
     public static final HashSet<AirportService> ALL = new HashSet<>();
 

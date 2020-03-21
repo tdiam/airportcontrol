@@ -4,6 +4,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -33,12 +34,22 @@ public class AirportData {
     private SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkings = new SimpleObjectProperty<>(
             FXCollections.observableHashMap());
 
+    private SimpleDoubleProperty grossTotal = new SimpleDoubleProperty(0);
+
     /**
      * Gets parking spots.
      * @return Property that stores an observable map of parking spots with id-{@link ParkingBase} as key-value pairs.
      */
     public SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingsProperty() {
         return parkings;
+    }
+
+    /**
+     * Gets gross total.
+     * @return Property that stores the gross total since start as a double value.
+     */
+    public SimpleDoubleProperty grossTotalProperty() {
+        return grossTotal;
     }
 
     /**
@@ -127,6 +138,7 @@ public class AirportData {
                     public void changed(ObservableValue<? extends Number> obs, Number oldValue, Number newValue) {
                         if ((int)newValue >= now + flight.getLandingTime()) {
                             flight.statusProperty().set(FlightStatus.PARKED);
+                            flight.parkedTimeProperty().set(now);
                             timeProp.removeListener(this);
                         }
                     }
@@ -139,5 +151,46 @@ public class AirportData {
         if (!accepted) {
             flight.statusProperty().set(FlightStatus.HOLDING);
         }
+    }
+
+    /**
+     * Handles takeoffs.
+     *
+     * Checks if flight can takeoff and calculates the charge.
+     *
+     * @param flight Flight instance.
+     * @return true if takeoff was successful, otherwise false.
+     */
+    public boolean takeoff(Flight flight) {
+        if (flight.statusProperty().get() != FlightStatus.PARKED) {
+            // If not parked
+            // Data consistency is assumed so we don't check if flight.parking is null
+            return false;
+        }
+
+        int now = root.timeData().minutesSinceStartProperty().get();
+        // Time since parked
+        int duration = now - flight.parkedTimeProperty().get();
+
+        double costPerMinute = flight.parkingProperty().get().costPerMinuteProperty().get();
+        double totalCost = duration * costPerMinute;
+        if (now > flight.stdProperty().get()) { // delayed
+            totalCost *= 2;
+        }
+        // Add services' cost
+        totalCost *= 1 + flight.getServicesTotalCoef();
+
+        if (now <= flight.stdProperty().get() - 25) { // 25 minutes before std
+            totalCost *= 0.8; // 20% reduction
+        } else if (now <= flight.stdProperty().get() - 10) { // 10 minutes before std
+            totalCost *= 0.9; // 10% reduction
+        }
+
+        // Update gross total
+        grossTotal.set(grossTotal.get() + totalCost);
+        // Remove flight
+        flight.parkingProperty().get().parkedFlightProperty().set(null);
+        root.flightData().flightsProperty().get().remove(flight.idProperty().get());
+        return true;
     }
 }
