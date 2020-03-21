@@ -1,96 +1,63 @@
 package gr.ntua.ece.medialab.airportcontrol.model;
 
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Set;
 
 public class Flight {
-    private String id;
-    private String city;
-    private FlightType flightType;
-    private FlightStatus status;
-    private ParkingBase parking;
-    private int landingRequestTime;
-    private PlaneType planeType;
-    private Set<AirportService> extraServices;
-    private int std;
+    private SimpleStringProperty id = new SimpleStringProperty();
+    private SimpleStringProperty city = new SimpleStringProperty();
+    private SimpleObjectProperty<FlightType> flightType = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<FlightStatus> status = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<ParkingBase> parking = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<PlaneType> planeType = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Set<AirportService>> extraServices = new SimpleObjectProperty<>();
+    private SimpleIntegerProperty landingRequestTime = new SimpleIntegerProperty();
+    private SimpleIntegerProperty std = new SimpleIntegerProperty();
 
     public Flight() {
     }
 
-    public String getId() {
+    public SimpleStringProperty idProperty() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCity() {
+    public SimpleStringProperty cityProperty() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public FlightType getFlightType() {
+    public SimpleObjectProperty<FlightType> flightTypeProperty() {
         return flightType;
     }
 
-    public void setFlightType(FlightType flightType) {
-        this.flightType = flightType;
-    }
-
-    public FlightStatus getStatus() {
+    public SimpleObjectProperty<FlightStatus> statusProperty() {
         return status;
     }
 
-    public void setStatus(FlightStatus status) {
-        this.status = status;
-    }
-
-    public ParkingBase getParking() {
+    public SimpleObjectProperty<ParkingBase> parkingProperty() {
         return parking;
     }
 
-    public void setParking(ParkingBase parking) {
-        this.parking = parking;
-    }
-
-    public int getLandingRequestTime() {
-        return landingRequestTime;
-    }
-
-    public void setLandingRequestTime(int landingRequestTime) {
-        this.landingRequestTime = landingRequestTime;
-    }
-
-    public PlaneType getPlaneType() {
+    public SimpleObjectProperty<PlaneType> planeTypeProperty() {
         return planeType;
     }
 
-    public void setPlaneType(PlaneType planeType) {
-        this.planeType = planeType;
-    }
-
-    public int getLandingTime() {
-        return PlaneType.landingTimeOf(planeType);
-    }
-
-    public Set<AirportService> getExtraServices() {
+    public SimpleObjectProperty<Set<AirportService>> extraServicesProperty() {
         return extraServices;
     }
 
-    public void setExtraServices(Set<AirportService> extraServices) {
-        this.extraServices = extraServices;
+    public SimpleIntegerProperty landingRequestTimeProperty() {
+        return landingRequestTime;
     }
 
-    public int getStd() {
+    public SimpleIntegerProperty stdProperty() {
         return std;
     }
 
-    public void setStd(int std) {
-        this.std = std;
+    public int getLandingTime() {
+        return PlaneType.landingTimeOf(planeType.get());
     }
 }

@@ -43,7 +43,7 @@ public class DelayedDetails implements Initializable {
         TableColumn<MapEntry<String, Flight>, String> parkingColumn = new TableColumn<>(
                 bundle.getString("details.parking_col.name"));
         parkingColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            ParkingBase parking = df.getValue().getValue().getParking();
+            ParkingBase parking = df.getValue().getValue().parkingProperty().get();
             // NOTE: Data consistency is assumed (status=holding therefore parking is not null)
             return parking.getId();
         }));
@@ -55,21 +55,21 @@ public class DelayedDetails implements Initializable {
         TableColumn<MapEntry<String, Flight>, String> flightTypeColumn = new TableColumn<>(
                 bundle.getString("details.flight_type_col.name"));
         flightTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            FlightType flightType = df.getValue().getValue().getFlightType();
+            FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
             return bundle.getString("flight_type." + flightType.toString());
         }));
 
         TableColumn<MapEntry<String, Flight>, String> planeTypeColumn = new TableColumn<>(
                 bundle.getString("details.plane_type_col.name"));
         planeTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            PlaneType planeType = df.getValue().getValue().getPlaneType();
+            PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
             return bundle.getString("plane_type." + planeType.toString());
         }));
 
         TableColumn<MapEntry<String, Flight>, String> stdColumn = new TableColumn<>(
                 bundle.getString("details.std_col.name"));
         stdColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            int std = df.getValue().getValue().getStd();
+            int std = df.getValue().getValue().stdProperty().get();
             return data.timeData().minutesToHM(std);
         }));
 

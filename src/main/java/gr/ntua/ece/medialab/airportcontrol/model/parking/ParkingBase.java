@@ -61,10 +61,10 @@ public abstract class ParkingBase {
 
     public boolean isGoodForFlight(Flight flight, int landingRequestTime) {
         return isAvailable()
-                && isAllowedFlightType(flight.getFlightType())
-                && isAllowedPlaneType(flight.getPlaneType())
-                && hasServices(flight.getExtraServices())
-                && maxStayMinutes() >= flight.getStd() - landingRequestTime;
+                && isAllowedFlightType(flight.flightTypeProperty().get())
+                && isAllowedPlaneType(flight.planeTypeProperty().get())
+                && hasServices(flight.extraServicesProperty().get())
+                && maxStayMinutes() >= flight.stdProperty().get() - landingRequestTime;
     }
 
     public abstract boolean isAllowedFlightType(FlightType flightType);

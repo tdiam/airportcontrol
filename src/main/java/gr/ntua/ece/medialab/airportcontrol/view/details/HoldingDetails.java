@@ -45,21 +45,21 @@ public class HoldingDetails implements Initializable {
         TableColumn<MapEntry<String, Flight>, String> flightTypeColumn = new TableColumn<>(
                 bundle.getString("details.flight_type_col.name"));
         flightTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            FlightType flightType = df.getValue().getValue().getFlightType();
+            FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
             return bundle.getString("flight_type." + flightType.toString());
         }));
 
         TableColumn<MapEntry<String, Flight>, String> planeTypeColumn = new TableColumn<>(
                 bundle.getString("details.plane_type_col.name"));
         planeTypeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            PlaneType planeType = df.getValue().getValue().getPlaneType();
+            PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
             return bundle.getString("plane_type." + planeType.toString());
         }));
 
         TableColumn<MapEntry<String, Flight>, String> landingRequestTimeColumn = new TableColumn<>(
                 bundle.getString("details.landing_request_col.name"));
         landingRequestTimeColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
-            int landingRequestTime = df.getValue().getValue().getLandingRequestTime();
+            int landingRequestTime = df.getValue().getValue().landingRequestTimeProperty().get();
             return data.timeData().minutesToHM(landingRequestTime);
         }));
 

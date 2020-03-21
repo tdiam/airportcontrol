@@ -90,7 +90,7 @@ public class FlightForm implements Initializable {
             throw new Errors.FlightFormValidationError("Flight not found");
         }
 
-        if (flight.getStatus() != FlightStatus.EN_ROUTE) {
+        if (flight.statusProperty().get() != FlightStatus.EN_ROUTE) {
             throw new Errors.FlightFormValidationError("Flight must be en route to request landing");
         }
 
@@ -101,7 +101,7 @@ public class FlightForm implements Initializable {
     public void submit() {
         try {
             Flight flight = validate();
-            flight.setExtraServices(Set.copyOf(servicesField.getSelectionModel().getSelectedItems()));
+            flight.extraServicesProperty().set(Set.copyOf(servicesField.getSelectionModel().getSelectedItems()));
             data.airportData().requestLanding(flight);
             //if (flight.getStatus()) Stage dialog = new PopupDialog("", null);
         } catch (Errors.FlightFormValidationError e) {

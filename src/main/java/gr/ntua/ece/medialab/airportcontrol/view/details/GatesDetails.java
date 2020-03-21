@@ -51,7 +51,7 @@ public class GatesDetails implements Initializable {
         flightColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
             Flight flight = df.getValue().getValue().getParkedFlight();
             if (flight == null) return "";
-            return flight.getId();
+            return flight.idProperty().get();
         }));
 
         TableColumn<MapEntry<String, ParkingBase>, String> stdColumn = new TableColumn<>(
@@ -59,7 +59,7 @@ public class GatesDetails implements Initializable {
         stdColumn.setCellValueFactory(df -> Bindings.createStringBinding(() -> {
             Flight flight = df.getValue().getValue().getParkedFlight();
             if (flight == null) return "";
-            return data.timeData().minutesToHM(flight.getStd());
+            return data.timeData().minutesToHM(flight.stdProperty().get());
         }));
 
         table.getColumns().setAll(idColumn, statusColumn, flightColumn, stdColumn);

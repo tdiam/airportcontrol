@@ -116,17 +116,17 @@ public class AirportData {
         boolean accepted = false;
         SimpleIntegerProperty timeProp = root.timeData().minutesSinceStartProperty();
         int now = timeProp.get();
-        flight.setLandingRequestTime(now);
+        flight.landingRequestTimeProperty().set(now);
         for (ParkingBase parking : parkings.get().values()) {
             if (parking.isGoodForFlight(flight, now)) {
                 parking.setParkedFlight(flight);
-                flight.setParking(parking);
-                flight.setStatus(FlightStatus.LANDING);
+                flight.parkingProperty().set(parking);
+                flight.statusProperty().set(FlightStatus.LANDING);
                 timeProp.addListener(new ChangeListener<Number>() {
                     @Override
                     public void changed(ObservableValue<? extends Number> obs, Number oldValue, Number newValue) {
                         if ((int)newValue >= now + flight.getLandingTime()) {
-                            flight.setStatus(FlightStatus.PARKED);
+                            flight.statusProperty().set(FlightStatus.PARKED);
                             timeProp.removeListener(this);
                         }
                     }
@@ -137,7 +137,7 @@ public class AirportData {
         }
 
         if (!accepted) {
-            flight.setStatus(FlightStatus.HOLDING);
+            flight.statusProperty().set(FlightStatus.HOLDING);
         }
     }
 }

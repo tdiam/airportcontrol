@@ -60,14 +60,14 @@ public class FlightData {
      */
     private Flight arrayToFlight(String[] values) throws NumberFormatException {
         Flight flight = new Flight();
-        flight.setId(values[0].trim());
-        flight.setCity(values[1].trim());
-        flight.setFlightType(FlightType.valueOf(Integer.parseInt(values[2].trim())));
-        flight.setStatus(FlightStatus.EN_ROUTE);
-        flight.setParking(null);
-        flight.setPlaneType(PlaneType.valueOf(Integer.parseInt(values[3].trim())));
-        flight.setStd(Integer.parseInt(values[4].trim()));
-        flight.setExtraServices(new HashSet<>());
+        flight.idProperty().set(values[0].trim());
+        flight.cityProperty().set(values[1].trim());
+        flight.flightTypeProperty().set(FlightType.valueOf(Integer.parseInt(values[2].trim())));
+        flight.statusProperty().set(FlightStatus.EN_ROUTE);
+        flight.parkingProperty().set(null);
+        flight.planeTypeProperty().set(PlaneType.valueOf(Integer.parseInt(values[3].trim())));
+        flight.stdProperty().set(Integer.parseInt(values[4].trim()));
+        flight.extraServicesProperty().set(new HashSet<>());
         return flight;
     }
 
@@ -87,7 +87,7 @@ public class FlightData {
                 String[] values = line.split(",");
                 try {
                     Flight flight = arrayToFlight(values);
-                    imported.put(flight.getId(), flight);
+                    imported.put(flight.idProperty().get(), flight);
                 } catch (NumberFormatException e) {
                     String msg = new StringBuilder().append(file).append(":").append(lineNum)
                             .append(" could not be parsed").toString();
@@ -109,10 +109,10 @@ public class FlightData {
         return flights.entrySet().stream().filter(entry -> {
             Flight flight = entry.getValue();
             // Not delayed if not parked
-            if (flight.getStatus() != FlightStatus.PARKED) return false;
+            if (flight.statusProperty().get() != FlightStatus.PARKED) return false;
 
             // current time > scheduled time
-            return root.timeData().minutesSinceStartProperty().get() > flight.getStd();
+            return root.timeData().minutesSinceStartProperty().get() > flight.stdProperty().get();
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -123,7 +123,7 @@ public class FlightData {
      */
     public Map<String, Flight> getHoldingFlights(ObservableMap<String, Flight> flights) {
         return flights.entrySet().stream()
-                .filter(entry -> entry.getValue().getStatus() == FlightStatus.HOLDING)
+                .filter(entry -> entry.getValue().statusProperty().get() == FlightStatus.HOLDING)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -137,10 +137,10 @@ public class FlightData {
         return flights.entrySet().stream().filter(entry -> {
             Flight flight = entry.getValue();
             // Not next departure if not parked
-            if (flight.getStatus() != FlightStatus.PARKED) return false;
+            if (flight.statusProperty().get() != FlightStatus.PARKED) return false;
 
             // scheduled time <= 10 minutes from now
-            int fromNow = flight.getStd() - root.timeData().minutesSinceStartProperty().get();
+            int fromNow = flight.stdProperty().get() - root.timeData().minutesSinceStartProperty().get();
             return fromNow >= 0 && fromNow <= 10;
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }

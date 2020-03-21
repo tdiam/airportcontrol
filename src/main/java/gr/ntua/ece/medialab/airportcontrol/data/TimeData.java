@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeData {
     private Data root;
-    private int clockIntervalMs = 100; // Every 5 seconds increase by 1 minute
+    private int clockIntervalMs = 1000; // Every 5 seconds increase by 1 minute
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduleHandler;
 
