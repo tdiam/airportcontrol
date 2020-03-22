@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeData {
     private Data root;
-    private int clockIntervalMs = 1000; // Every 5 seconds increase by 1 minute
+    private int clockIntervalMs = 500; // Every 5 seconds increase by 1 minute
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduleHandler;
 
@@ -74,6 +74,34 @@ public class TimeData {
      */
     public void stop() {
         scheduleHandler.cancel(true);
+    }
+
+    /**
+     * {@code runIfPast} defaults to {@code false}.
+     *
+     * @see TimeData#schedule(Runnable, long, boolean)
+     */
+    public ScheduledFuture<?> schedule(Runnable command, long when) {
+        return schedule(command, when, false);
+    }
+
+    /**
+     * Schedule a task for some time in the future.
+     * @param command A runnable.
+     * @param when Time given as simulation minutes since start.
+     * @param runIfPast Run task if {@code when} was in the past.
+     * @return A ScheduledFuture instance.
+     */
+    public ScheduledFuture<?> schedule(Runnable command, long when, boolean runIfPast) {
+        // TODO: The delay may be longer than necessary, since the schedule is not synced with the tick schedule.
+        long delay = (when - minutesSinceStart.get()) * clockIntervalMs;
+        if (delay < 0) {
+            if (runIfPast) {
+                command.run();
+            }
+            return null;
+        }
+        return scheduler.schedule(() -> Platform.runLater(command), delay, TimeUnit.MILLISECONDS);
     }
 
     /**

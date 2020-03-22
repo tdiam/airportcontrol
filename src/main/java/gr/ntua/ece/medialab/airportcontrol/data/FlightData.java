@@ -1,12 +1,16 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
-import gr.ntua.ece.medialab.airportcontrol.model.Flight;
-import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
-import gr.ntua.ece.medialab.airportcontrol.model.FlightType;
-import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
+import gr.ntua.ece.medialab.airportcontrol.model.*;
+import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Flight data controller.
@@ -22,23 +25,41 @@ import java.util.stream.Collectors;
 public class FlightData {
     private Data root;
 
+    private SimpleObjectProperty<ObservableMap<String, Flight>> flightMap = new SimpleObjectProperty<>(
+            FXCollections.observableHashMap());
+
+    private SimpleListProperty<Map.Entry<String, Flight>> flightList = new SimpleListProperty<>();
+
     /**
      * Creates a new instance of the flight data controller.
      * @param root Reference to root controller.
      */
     FlightData(Data root) {
         this.root = root;
+        bindFlightsList();
     }
 
-    private SimpleObjectProperty<ObservableMap<String, Flight>> flights = new SimpleObjectProperty<>(
-            FXCollections.observableHashMap());
+    private void bindFlightsList() {
+        flightList.bind(Bindings.createObjectBinding(
+            () -> ObservableUtil.observableMapToList(flightMap.get()),
+            flightMap
+        ));
+    }
 
     /**
-     * Gets active flights.
+     * Gets active flights as a map.
      * @return Property that stores an observable map of active flights with id-{@link Flight} as key-value pairs.
      */
-    public SimpleObjectProperty<ObservableMap<String, Flight>> flightsProperty() {
-        return flights;
+    public SimpleObjectProperty<ObservableMap<String, Flight>> flightMapProperty() {
+        return flightMap;
+    }
+
+    /**
+     * Gets active flights as a list.
+     * @return Property that stores an observable list of key-value pairs of active flights.
+     */
+    public SimpleListProperty<Map.Entry<String, Flight>> getFlights() {
+        return new SimpleListProperty<>(flightList.sorted());
     }
 
     /**
@@ -64,6 +85,7 @@ public class FlightData {
         flight.cityProperty().set(values[1].trim());
         flight.flightTypeProperty().set(FlightType.valueOf(Integer.parseInt(values[2].trim())));
         flight.statusProperty().set(FlightStatus.EN_ROUTE);
+        flight.parkedStatusProperty().set(FlightParkedStatus.NORMAL);
         flight.parkingProperty().set(null);
         flight.planeTypeProperty().set(PlaneType.valueOf(Integer.parseInt(values[3].trim())));
         flight.stdProperty().set(Integer.parseInt(values[4].trim()));
@@ -97,51 +119,82 @@ public class FlightData {
             }
         }
 
-        flights.set(FXCollections.observableMap(imported));
+        flightMap.set(FXCollections.observableMap(imported));
+    }
+
+    /**
+     * Gets landing flights.
+     * @return A Property that contains a sorted list of the key-value pairs of landing flights.
+     */
+    public SimpleListProperty<Map.Entry<String, Flight>> getLandingFlights() {
+        SimpleListProperty<Map.Entry<String, Flight>> prop = new SimpleListProperty<>();
+
+        prop.bind(Bindings.createObjectBinding(() -> {
+            ObservableList<Map.Entry<String, Flight>> base = FXCollections.observableArrayList(
+                    (Map.Entry<String, Flight> entry) -> new Observable[] {entry.getValue().statusProperty()});
+            FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
+                    f -> f.getValue().statusProperty().get() == FlightStatus.LANDING);
+            base.addAll(flightList.get());
+            return new SortedList<>(filtered);
+        }, flightList));
+
+        return prop;
     }
 
     /**
      * Gets parked flights whose scheduled departure time has passed.
-     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
-     * @return A plain Map of the delayed flights.
+     * @return A Property that contains a sorted list of the key-value pairs of delayed flights.
      */
-    public Map<String, Flight> getDelayedFlights(ObservableMap<String, Flight> flights) {
-        return flights.entrySet().stream().filter(entry -> {
-            Flight flight = entry.getValue();
-            // Not delayed if not parked
-            if (flight.statusProperty().get() != FlightStatus.PARKED) return false;
+    public SimpleListProperty<Map.Entry<String, Flight>> getDelayedFlights() {
+        SimpleListProperty<Map.Entry<String, Flight>> prop = new SimpleListProperty<>();
 
-            // current time > scheduled time
-            return root.timeData().minutesSinceStartProperty().get() > flight.stdProperty().get();
-        }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        prop.bind(Bindings.createObjectBinding(() -> {
+            ObservableList<Map.Entry<String, Flight>> base = FXCollections.observableArrayList(
+                    (Map.Entry<String, Flight> entry) -> new Observable[] {entry.getValue().parkedStatusProperty()});
+            FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
+                    f -> f.getValue().parkedStatusProperty().get() == FlightParkedStatus.DELAYED);
+            base.addAll(flightList.get());
+            return new SortedList<>(filtered);
+        }, flightList));
+
+        return prop;
     }
 
     /**
      * Gets flights with HOLDING status.
-     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
-     * @return A plain Map of the holding flights.
+     * @return A Property that contains a sorted list of the key-value pairs of holding flights.
      */
-    public Map<String, Flight> getHoldingFlights(ObservableMap<String, Flight> flights) {
-        return flights.entrySet().stream()
-                .filter(entry -> entry.getValue().statusProperty().get() == FlightStatus.HOLDING)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    public SimpleListProperty<Map.Entry<String, Flight>> getHoldingFlights() {
+        SimpleListProperty<Map.Entry<String, Flight>> prop = new SimpleListProperty<>();
+
+        prop.bind(Bindings.createObjectBinding(() -> {
+            ObservableList<Map.Entry<String, Flight>> base = FXCollections.observableArrayList(
+                    (Map.Entry<String, Flight> entry) -> new Observable[] {entry.getValue().statusProperty()});
+            FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
+                    f -> f.getValue().statusProperty().get() == FlightStatus.HOLDING);
+            base.addAll(flightList.get());
+            return new SortedList<>(filtered);
+        }, flightList));
+
+        return prop;
     }
 
     /**
      * Gets the next departures, ie. flights with scheduled departure within 10 minutes from now.
-     * @param flights An observable map of all active flights with id-{@link Flight} as key-value pairs.
-     * @return A plain Map of the flights that are departing next.
+     * @return A Property that contains a sorted list of the key-value pairs of flights that are departing next.
      */
-    public Map<String, Flight> getNextDepartures(ObservableMap<String, Flight> flights) {
-        // TODO: Make this a live list that updates with each clock tick.
-        return flights.entrySet().stream().filter(entry -> {
-            Flight flight = entry.getValue();
-            // Not next departure if not parked
-            if (flight.statusProperty().get() != FlightStatus.PARKED) return false;
+    public SimpleListProperty<Map.Entry<String, Flight>> getNextDepartures() {
+        SimpleListProperty<Map.Entry<String, Flight>> prop = new SimpleListProperty<>();
 
-            // scheduled time <= 10 minutes from now
-            int fromNow = flight.stdProperty().get() - root.timeData().minutesSinceStartProperty().get();
-            return fromNow >= 0 && fromNow <= 10;
-        }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        prop.bind(Bindings.createObjectBinding(() -> {
+            ObservableList<Map.Entry<String, Flight>> base = FXCollections.observableArrayList(
+                    (Map.Entry<String, Flight> entry) -> new Observable[] {entry.getValue().parkedStatusProperty()});
+            FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
+                    f -> f.getValue().parkedStatusProperty().get() == FlightParkedStatus.NEXT_DEPARTURE);
+            base.addAll(flightList.get());
+            return new SortedList<>(filtered);
+        }, flightList));
+
+        return prop;
     }
 }

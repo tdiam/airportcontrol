@@ -46,7 +46,7 @@ public class FlightForm implements Initializable {
         bundle = resources;
         populateServicesField();
 
-        SimpleObjectProperty<ObservableMap<String, Flight>> flights = data.flightData().flightsProperty();
+        SimpleObjectProperty<ObservableMap<String, Flight>> flights = data.flightData().flightMapProperty();
 
         setDisabledForm(true);
         flights.addListener((obs, oldValue, newValue) -> {
@@ -93,7 +93,7 @@ public class FlightForm implements Initializable {
     }
 
     private Flight validate() throws Errors.FlightFormValidationError {
-        Flight flight = data.flightData().flightsProperty().get().get(idField.getText());
+        Flight flight = data.flightData().flightMapProperty().get().get(idField.getText());
 
         if (flight == null) {
             throw new Errors.FlightFormValidationError("Flight not found");

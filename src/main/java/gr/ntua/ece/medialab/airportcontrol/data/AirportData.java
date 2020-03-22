@@ -1,21 +1,31 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
+import gr.ntua.ece.medialab.airportcontrol.model.FlightParkedStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingGate;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
+import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Airport data controller. Data concerns the airport parking spots.
@@ -23,25 +33,43 @@ import java.util.HashMap;
 public class AirportData {
     private Data root;
 
+    private SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingMap = new SimpleObjectProperty<>(
+            FXCollections.observableHashMap());
+
+    private SimpleListProperty<Map.Entry<String, ParkingBase>> parkingList = new SimpleListProperty<>();
+
+    private SimpleDoubleProperty grossTotal = new SimpleDoubleProperty(0);
+
     /**
      * Creates a new instance of the airport data controller.
      * @param root Reference to root controller.
      */
     AirportData(Data root) {
         this.root = root;
+        bindParkingList();
     }
 
-    private SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkings = new SimpleObjectProperty<>(
-            FXCollections.observableHashMap());
-
-    private SimpleDoubleProperty grossTotal = new SimpleDoubleProperty(0);
+    private void bindParkingList() {
+        parkingList.bind(Bindings.createObjectBinding(
+            () -> ObservableUtil.observableMapToList(parkingMap.get()),
+            parkingMap
+        ));
+    }
 
     /**
-     * Gets parking spots.
+     * Gets parking spots as map.
      * @return Property that stores an observable map of parking spots with id-{@link ParkingBase} as key-value pairs.
      */
-    public SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingsProperty() {
-        return parkings;
+    public SimpleObjectProperty<ObservableMap<String, ParkingBase>> parkingMapProperty() {
+        return parkingMap;
+    }
+
+    /**
+     * Gets parking spots as sorted list.
+     * @return Property that stores an observable list of key-value pairs of parking spots.
+     */
+    public SimpleListProperty<Map.Entry<String, ParkingBase>> getParkings() {
+        return new SimpleListProperty<>(parkingList.sorted());
     }
 
     /**
@@ -111,7 +139,26 @@ public class AirportData {
             }
         }
 
-        parkings.set(FXCollections.observableMap(imported));
+        parkingMap.set(FXCollections.observableMap(imported));
+    }
+
+    /**
+     * Gets available parking spots.
+     * @return A Property that contains a sorted list of the key-value pairs of available parking spots.
+     */
+    public SimpleListProperty<Map.Entry<String, ParkingBase>> getAvailableParkings() {
+        SimpleListProperty<Map.Entry<String, ParkingBase>> prop = new SimpleListProperty<>();
+
+        prop.bind(Bindings.createObjectBinding(() -> {
+            ObservableList<Map.Entry<String, ParkingBase>> base = FXCollections.observableArrayList(
+                    (Map.Entry<String, ParkingBase> entry) -> new Observable[]{entry.getValue().isAvailableProperty()});
+            FilteredList<Map.Entry<String, ParkingBase>> filtered = new FilteredList<>(base,
+                    f -> f.getValue().isAvailableProperty().get());
+            base.addAll(parkingList.get());
+            return new SortedList<>(filtered);
+        }, parkingList));
+
+        return prop;
     }
 
     /**
@@ -128,21 +175,33 @@ public class AirportData {
         SimpleIntegerProperty timeProp = root.timeData().minutesSinceStartProperty();
         int now = timeProp.get();
         flight.landingRequestTimeProperty().set(now);
-        for (ParkingBase parking : parkings.get().values()) {
+        for (ParkingBase parking : parkingMap.get().values()) {
             if (parking.isGoodForFlight(flight, now)) {
                 parking.parkedFlightProperty().set(flight);
                 flight.parkingProperty().set(parking);
                 flight.statusProperty().set(FlightStatus.LANDING);
-                timeProp.addListener(new ChangeListener<Number>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Number> obs, Number oldValue, Number newValue) {
-                        if ((int)newValue >= now + flight.getLandingTime()) {
-                            flight.statusProperty().set(FlightStatus.PARKED);
-                            flight.parkedTimeProperty().set(now);
-                            timeProp.removeListener(this);
-                        }
-                    }
-                });
+
+                int landWhen = now + flight.getLandingTime();
+                int std = flight.stdProperty().get();
+
+                // Schedule landing
+                root.timeData().schedule(() -> {
+                    flight.statusProperty().set(FlightStatus.PARKED);
+                    flight.parkedTimeProperty().set(now);
+                }, landWhen);
+
+                // If flight will land before std, schedule marking as next departure
+                if (landWhen <= std) {
+                    root.timeData().schedule(() -> {
+                        flight.parkedStatusProperty().set(FlightParkedStatus.NEXT_DEPARTURE);
+                    }, std - 10 + 1, true);
+                }
+
+                // Schedule marking as delayed
+                root.timeData().schedule(() -> {
+                    flight.parkedStatusProperty().set(FlightParkedStatus.DELAYED);
+                }, Math.max(std + 1, landWhen));
+
                 accepted = true;
                 break;
             }
@@ -190,7 +249,7 @@ public class AirportData {
         grossTotal.set(grossTotal.get() + totalCost);
         // Remove flight
         flight.parkingProperty().get().parkedFlightProperty().set(null);
-        root.flightData().flightsProperty().get().remove(flight.idProperty().get());
+        root.flightData().flightMapProperty().get().remove(flight.idProperty().get());
         return true;
     }
 }

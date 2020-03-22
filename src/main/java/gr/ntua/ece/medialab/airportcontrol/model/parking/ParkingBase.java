@@ -78,6 +78,6 @@ public abstract class ParkingBase implements Comparable<ParkingBase> {
 
     @Override
     public int compareTo(ParkingBase other) {
-        return idProperty().get().compareTo(other.idProperty().get());
+        return other.idProperty().get().compareTo(idProperty().get());
     }
 }

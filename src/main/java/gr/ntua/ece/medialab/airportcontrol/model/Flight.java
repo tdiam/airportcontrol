@@ -12,6 +12,7 @@ public class Flight implements Comparable<Flight> {
     private SimpleStringProperty city = new SimpleStringProperty();
     private SimpleObjectProperty<FlightType> flightType = new SimpleObjectProperty<>();
     private SimpleObjectProperty<FlightStatus> status = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<FlightParkedStatus> parkedStatus = new SimpleObjectProperty<>();
     private SimpleObjectProperty<ParkingBase> parking = new SimpleObjectProperty<>();
     private SimpleObjectProperty<PlaneType> planeType = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Set<AirportService>> extraServices = new SimpleObjectProperty<>();
@@ -36,6 +37,10 @@ public class Flight implements Comparable<Flight> {
 
     public SimpleObjectProperty<FlightStatus> statusProperty() {
         return status;
+    }
+
+    public SimpleObjectProperty<FlightParkedStatus> parkedStatusProperty() {
+        return parkedStatus;
     }
 
     public SimpleObjectProperty<ParkingBase> parkingProperty() {
@@ -72,6 +77,6 @@ public class Flight implements Comparable<Flight> {
 
     @Override
     public int compareTo(Flight other) {
-        return idProperty().get().compareTo(other.idProperty().get());
+        return other.idProperty().get().compareTo(idProperty().get());
     }
 }
