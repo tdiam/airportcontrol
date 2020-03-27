@@ -51,7 +51,7 @@ public class AirportData {
 
     private void bindParkingList() {
         parkingList.bind(Bindings.createObjectBinding(
-            () -> ObservableUtil.observableMapToList(parkingMap.get()),
+            () -> ObservableUtil.observableMapToList(parkingMap.get()).sorted(),
             parkingMap
         ));
     }
@@ -69,7 +69,7 @@ public class AirportData {
      * @return Property that stores an observable list of key-value pairs of parking spots.
      */
     public SimpleListProperty<Map.Entry<String, ParkingBase>> getParkings() {
-        return new SimpleListProperty<>(parkingList.sorted());
+        return parkingList;
     }
 
     /**

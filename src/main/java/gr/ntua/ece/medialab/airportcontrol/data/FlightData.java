@@ -41,7 +41,7 @@ public class FlightData {
 
     private void bindFlightsList() {
         flightList.bind(Bindings.createObjectBinding(
-            () -> ObservableUtil.observableMapToList(flightMap.get()),
+            () -> ObservableUtil.observableMapToList(flightMap.get()).sorted(),
             flightMap
         ));
     }
@@ -59,7 +59,7 @@ public class FlightData {
      * @return Property that stores an observable list of key-value pairs of active flights.
      */
     public SimpleListProperty<Map.Entry<String, Flight>> getFlights() {
-        return new SimpleListProperty<>(flightList.sorted());
+        return flightList;
     }
 
     /**
