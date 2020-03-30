@@ -3,6 +3,7 @@ package gr.ntua.ece.medialab.airportcontrol.view.details;
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -67,7 +68,7 @@ public class GatesDetails implements Initializable {
                     () -> {
                         Flight flight = df.getValue().getValue().parkedFlightProperty().get();
                         if (flight == null) return "";
-                        return data.timeData().minutesToHM(flight.stdProperty().get());
+                        return TimeUtil.minutesToHM(flight.stdProperty().get());
                     },
                     df.getValue().getValue().parkedFlightProperty()
                 ));

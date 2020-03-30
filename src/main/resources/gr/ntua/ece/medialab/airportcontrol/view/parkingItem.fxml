@@ -7,10 +7,45 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx"
+<GridPane xmlns="http://javafx.com/javafx"
         xmlns:fx="http://javafx.com/fxml"
         fx:id="parkingItem"
+        styleClass="parkingItem"
         fx:controller="gr.ntua.ece.medialab.airportcontrol.view.ParkingItem"
         stylesheets="@parkingDashboard.css">
-    <Label>hello there</Label>
-</VBox>
+    <Label fx:id="flightId" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
+    <Label fx:id="flightCity" GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.columnSpan="6" />
+    <VBox fx:id="mainInfo" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="12">
+        <HBox fx:id="parkedAt">
+            <Label fx:id="flightParkedAtLabel" text="%parking_item.parked_at" />
+            <Label fx:id="flightParkedAt" />
+        </HBox>
+        <HBox fx:id="departingAt">
+            <Label fx:id="flightStdLabel" text="%parking_item.departing_at" />
+            <Label fx:id="flightStd" />
+        </HBox>
+        <Button fx:id="takeoffBtn" onAction="#takeoff" text="%parking_item.takeoff" />
+    </VBox>
+    <Label fx:id="parkingId" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+    <Label fx:id="parkingType" GridPane.rowIndex="2" GridPane.columnIndex="4" GridPane.columnSpan="8" />
+    <columnConstraints>
+        <!-- 12 column layout -->
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+        <ColumnConstraints percentWidth="8.333333" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="15" />
+        <RowConstraints percentHeight="70" />
+        <RowConstraints percentHeight="15" />
+    </rowConstraints>
+</GridPane>

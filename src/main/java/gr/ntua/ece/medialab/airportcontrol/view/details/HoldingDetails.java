@@ -4,6 +4,7 @@ import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightType;
 import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
+import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -66,7 +67,7 @@ public class HoldingDetails implements Initializable {
                 Bindings.createStringBinding(
                     () -> {
                         int landingRequestTime = df.getValue().getValue().landingRequestTimeProperty().get();
-                        return data.timeData().minutesToHM(landingRequestTime);
+                        return TimeUtil.minutesToHM(landingRequestTime);
                     },
                     df.getValue().getValue().landingRequestTimeProperty()
                 ));

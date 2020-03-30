@@ -6,6 +6,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightType;
 import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -99,7 +100,7 @@ public class FlightsDetails implements Initializable {
                 Bindings.createStringBinding(
                     () -> {
                         int std = df.getValue().getValue().stdProperty().get();
-                        return data.timeData().minutesToHM(std);
+                        return TimeUtil.minutesToHM(std);
                     },
                     df.getValue().getValue().stdProperty()
                 ));

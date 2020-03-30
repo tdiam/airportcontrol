@@ -7,9 +7,19 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<GridPane xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml"
-        fx:id="parkingDashboard"
-        fx:controller="gr.ntua.ece.medialab.airportcontrol.view.ParkingDashboard"
-        stylesheets="@parkingDashboard.css">
-</GridPane>
+<ScrollPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    stylesheets="@parkingDashboard.css"
+    fx:controller="gr.ntua.ece.medialab.airportcontrol.view.ParkingDashboard"
+    fitToWidth="true">
+    <GridPane fx:id="parkingDashboard">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+        </columnConstraints>
+    </GridPane>
+</ScrollPane>

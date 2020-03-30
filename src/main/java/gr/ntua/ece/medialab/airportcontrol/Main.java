@@ -14,6 +14,8 @@ import gr.ntua.ece.medialab.airportcontrol.util.ResourceBundleWrapper;
 public class Main extends Application {
     private ResourceBundle bundle;
 
+
+
     public static void main(String[] args) {
         launch(args);
     }

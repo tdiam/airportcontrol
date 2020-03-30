@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -177,31 +178,7 @@ public class AirportData {
         flight.landingRequestTimeProperty().set(now);
         for (ParkingBase parking : parkingMap.get().values()) {
             if (parking.isGoodForFlight(flight, now)) {
-                parking.parkedFlightProperty().set(flight);
-                flight.parkingProperty().set(parking);
-                flight.statusProperty().set(FlightStatus.LANDING);
-
-                int landWhen = now + flight.getLandingTime();
-                int std = flight.stdProperty().get();
-
-                // Schedule landing
-                root.timeData().schedule(() -> {
-                    flight.statusProperty().set(FlightStatus.PARKED);
-                    flight.parkedTimeProperty().set(now);
-                }, landWhen);
-
-                // If flight will land before std, schedule marking as next departure
-                if (landWhen <= std) {
-                    root.timeData().schedule(() -> {
-                        flight.parkedStatusProperty().set(FlightParkedStatus.NEXT_DEPARTURE);
-                    }, std - 10 + 1, true);
-                }
-
-                // Schedule marking as delayed
-                root.timeData().schedule(() -> {
-                    flight.parkedStatusProperty().set(FlightParkedStatus.DELAYED);
-                }, Math.max(std + 1, landWhen));
-
+                park(flight, parking);
                 accepted = true;
                 break;
             }
@@ -210,6 +187,41 @@ public class AirportData {
         if (!accepted) {
             flight.statusProperty().set(FlightStatus.HOLDING);
         }
+    }
+
+    /**
+     * Park flight.
+     *
+     * @param flight Flight instance.
+     * @param parking ParkingBase instance.
+     */
+    public void park(Flight flight, ParkingBase parking) {
+        int now = root.timeData().minutesSinceStartProperty().get();
+
+        parking.parkedFlightProperty().set(flight);
+        flight.parkingProperty().set(parking);
+        flight.statusProperty().set(FlightStatus.LANDING);
+
+        int landWhen = now + flight.getLandingTime();
+        int std = flight.stdProperty().get();
+
+        // Schedule landing
+        root.timeData().schedule(() -> {
+            flight.statusProperty().set(FlightStatus.PARKED);
+            flight.parkedTimeProperty().set(now);
+        }, landWhen);
+
+        // If flight will land before std, schedule marking as next departure
+        if (landWhen <= std) {
+            root.timeData().schedule(() -> {
+                flight.parkedStatusProperty().set(FlightParkedStatus.NEXT_DEPARTURE);
+            }, std - 10 + 1, true);
+        }
+
+        // Schedule marking as delayed
+        root.timeData().schedule(() -> {
+            flight.parkedStatusProperty().set(FlightParkedStatus.DELAYED);
+        }, Math.max(std + 1, landWhen));
     }
 
     /**
@@ -250,6 +262,24 @@ public class AirportData {
         // Remove flight
         flight.parkingProperty().get().parkedFlightProperty().set(null);
         root.flightData().flightMapProperty().get().remove(flight.idProperty().get());
+
+        checkHolding(flight.parkingProperty().get());
         return true;
+    }
+
+    /**
+     * Handles reallocation of parking to holding flights after a takeoff.
+     */
+    public void checkHolding(ParkingBase parking) {
+        int now = root.timeData().minutesSinceStartProperty().get();
+
+        List<Map.Entry<String, Flight>> holdingFlights = root.flightData().getHoldingFlights().get();
+        for (Map.Entry<String, Flight> entry : holdingFlights) {
+            Flight flight = entry.getValue();
+            if (parking.isGoodForFlight(flight, now)) {
+                park(flight, parking);
+                break;
+            }
+        }
     }
 }

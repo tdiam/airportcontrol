@@ -1,0 +1,64 @@
+#parkingDashboard {
+    -fx-padding: 0.666667em;
+    -fx-hgap: 1.333333em;
+    -fx-vgap: 1.333333em;
+}
+
+#parkingItem {
+    -fx-border-width: 1;
+    -fx-border-color: #2C3E50;
+    -fx-pref-height: 240;
+}
+
+#parkingItem.available {
+    -fx-background-color: #18BC9C;
+}
+
+#parkingItem.occupied {
+    -fx-background-color: #ecf0f1;
+}
+
+#flightId, #flightCity, #parkingId, #parkingType {
+    -fx-padding: 10 15 10 15;
+    -fx-max-width: 99999;
+    -fx-max-height: 99999;
+}
+
+#parkingId, #parkingType {
+    -fx-border-color: #2C3E50;
+    -fx-font-size: 1.15em;
+}
+
+#parkingId {
+    -fx-border-width: 1 1 0 0;
+}
+
+#parkingType {
+    -fx-border-width: 1 0 0 0;
+}
+
+#mainInfo {
+    -fx-padding: 10 15 10 15;
+    -fx-alignment: center-left;
+}
+
+#parkedAt .label {
+    -fx-text-fill: #555555;
+}
+
+#departingAt {
+    -fx-font-size: 1.35em;
+    -fx-padding: 0 0 5 0;
+}
+
+#parkingItem.flight-next #departingAt > * {
+    -fx-text-fill: #149a80;
+}
+
+#parkingItem.flight-delayed #departingAt > * {
+    -fx-text-fill: #E74C3C;
+}
+
+#flightParkedAtLabel, #flightStdLabel {
+    -fx-padding: 0 5 0 0;
+}

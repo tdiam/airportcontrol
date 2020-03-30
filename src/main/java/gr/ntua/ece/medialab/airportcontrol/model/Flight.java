@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.Comparator;
 import java.util.Set;
 
 public class Flight implements Comparable<Flight> {
@@ -78,5 +79,13 @@ public class Flight implements Comparable<Flight> {
     @Override
     public int compareTo(Flight other) {
         return other.idProperty().get().compareTo(idProperty().get());
+    }
+
+    public static Comparator<Flight> getStdComparator() {
+        return Comparator.comparingInt(f -> f.stdProperty().get());
+    }
+
+    public static Comparator<Flight> getLandingRequestTimeComparator() {
+        return Comparator.comparingInt(f -> f.landingRequestTimeProperty().get());
     }
 }

@@ -48,7 +48,7 @@ public class FlightForm implements Initializable {
 
         SimpleObjectProperty<ObservableMap<String, Flight>> flights = data.flightData().flightMapProperty();
 
-        setDisabledForm(true);
+        setDisabledForm(flights.getValue().isEmpty());
         flights.addListener((obs, oldValue, newValue) -> {
             setDisabledForm(newValue.isEmpty());
         });

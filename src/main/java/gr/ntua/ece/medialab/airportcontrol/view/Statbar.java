@@ -3,6 +3,7 @@ package gr.ntua.ece.medialab.airportcontrol.view;
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -70,6 +71,6 @@ public class Statbar implements Initializable {
         SimpleIntegerProperty prop = data.timeData().minutesSinceStartProperty();
 
         totalTime.textProperty().bind(
-                Bindings.createStringBinding(() -> data.timeData().minutesToHM(prop.get()), prop));
+                Bindings.createStringBinding(() -> TimeUtil.minutesToHM(prop.get()), prop));
     }
 }

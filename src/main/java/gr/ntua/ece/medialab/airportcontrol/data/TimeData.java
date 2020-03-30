@@ -103,15 +103,4 @@ public class TimeData {
         }
         return scheduler.schedule(() -> Platform.runLater(command), delay, TimeUnit.MILLISECONDS);
     }
-
-    /**
-     * Converts an integer number of minutes to the duration in hh:mm string format.
-     * @param minutes Number of minutes.
-     * @return String that represents the duration in hh:mm format.
-     */
-    public String minutesToHM(int minutes) {
-        int hours = minutes / 60;
-        minutes %= 60;
-        return String.format("%02d:%02d", hours, minutes);
-    }
 }

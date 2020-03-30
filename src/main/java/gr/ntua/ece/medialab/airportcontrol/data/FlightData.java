@@ -1,6 +1,7 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
 import gr.ntua.ece.medialab.airportcontrol.model.*;
+import gr.ntua.ece.medialab.airportcontrol.util.MapEntry;
 import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -154,7 +155,7 @@ public class FlightData {
             FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
                     f -> f.getValue().parkedStatusProperty().get() == FlightParkedStatus.DELAYED);
             base.addAll(flightList.get());
-            return new SortedList<>(filtered);
+            return new SortedList<>(filtered, MapEntry.ValueComparator(Flight.getStdComparator()));
         }, flightList));
 
         return prop;
@@ -173,7 +174,7 @@ public class FlightData {
             FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
                     f -> f.getValue().statusProperty().get() == FlightStatus.HOLDING);
             base.addAll(flightList.get());
-            return new SortedList<>(filtered);
+            return new SortedList<>(filtered, MapEntry.ValueComparator(Flight.getLandingRequestTimeComparator()));
         }, flightList));
 
         return prop;
@@ -192,7 +193,7 @@ public class FlightData {
             FilteredList<Map.Entry<String, Flight>> filtered = new FilteredList<>(base,
                     f -> f.getValue().parkedStatusProperty().get() == FlightParkedStatus.NEXT_DEPARTURE);
             base.addAll(flightList.get());
-            return new SortedList<>(filtered);
+            return new SortedList<>(filtered, MapEntry.ValueComparator(Flight.getStdComparator()));
         }, flightList));
 
         return prop;
