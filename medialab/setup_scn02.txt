@@ -1,0 +1,5 @@
+14,City A, 1, 2, 40
+b2,Atlantis,2,3, 85
+15,Georgia,2,1,52
+16,New York,3,3,48
+17,Sao Paolo,1,3,32
