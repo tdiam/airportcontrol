@@ -14,6 +14,10 @@
     -fx-background-color: #18BC9C;
 }
 
+#parkingItem.landing {
+    -fx-background-color: #F39C12;
+}
+
 #parkingItem.occupied {
     -fx-background-color: #ecf0f1;
 }

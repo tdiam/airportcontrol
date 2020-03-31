@@ -3,6 +3,7 @@ package gr.ntua.ece.medialab.airportcontrol.view;
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightParkedStatus;
+import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
 import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
@@ -63,6 +64,7 @@ public class ParkingItem implements Initializable {
 
     private void handleBindFlightProperties(Flight oldFlight, Flight newFlight) {
         if (oldFlight != null) {
+            oldFlight.statusProperty().unbind();
             oldFlight.parkedStatusProperty().unbind();
         }
         if (newFlight == null) {
@@ -79,6 +81,10 @@ public class ParkingItem implements Initializable {
             flightStd.textProperty().bind(Bindings.createStringBinding(() -> {
                 return TimeUtil.minutesToHM(newFlight.stdProperty().getValue());
             }, newFlight.stdProperty()));
+
+            onFlightStatusChange(newFlight.statusProperty().get());
+            newFlight.statusProperty().addListener((obs, oldValue, newValue) -> onFlightStatusChange(newValue));
+
             onFlightParkedStatusChange(newFlight.parkedStatusProperty().get());
             newFlight.parkedStatusProperty().addListener((obs, oldValue, newValue) ->
                     onFlightParkedStatusChange(newValue));
@@ -88,11 +94,23 @@ public class ParkingItem implements Initializable {
     private void onAvailableChange(boolean isAvailable) {
         if (isAvailable) {
             parkingItem.getStyleClass().remove("occupied");
+            parkingItem.getStyleClass().remove("landing");
             parkingItem.getStyleClass().add("available");
             List.of(flightId, flightCity, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd, takeoffBtn)
                     .forEach(item -> item.setVisible(false));
-        } else {
+        }
+    }
+
+    private void onFlightStatusChange(FlightStatus status) {
+        if (status == FlightStatus.LANDING) {
             parkingItem.getStyleClass().remove("available");
+            parkingItem.getStyleClass().remove("occupied");
+            parkingItem.getStyleClass().add("landing");
+            List.of(flightId, flightCity, flightStdLabel, flightStd).forEach(item -> item.setVisible(true));
+            List.of(flightParkedAtLabel, flightParkedAt, takeoffBtn).forEach(item -> item.setVisible(false));
+        } else if (status == FlightStatus.PARKED) {
+            parkingItem.getStyleClass().remove("available");
+            parkingItem.getStyleClass().remove("landing");
             parkingItem.getStyleClass().add("occupied");
             List.of(flightId, flightCity, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd, takeoffBtn)
                     .forEach(item -> item.setVisible(true));
