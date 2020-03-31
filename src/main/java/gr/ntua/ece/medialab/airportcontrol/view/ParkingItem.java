@@ -6,6 +6,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.FlightParkedStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,7 +24,6 @@ import java.util.ResourceBundle;
 
 public class ParkingItem implements Initializable {
     private Data data;
-    private ResourceBundle bundle;
     private ParkingBase parking;
 
     @FXML
@@ -39,7 +39,6 @@ public class ParkingItem implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         data = Data.getInstance();
-        bundle = resources;
 
         List.of(flightId, flightCity, available, landing, flightParkedAtLabel, flightParkedAt, flightStdLabel,
                 flightStd, parkingId, parkingType).forEach(item -> item.managedProperty().bind(item.visibleProperty()));
@@ -58,7 +57,7 @@ public class ParkingItem implements Initializable {
         parkingId.textProperty().bind(parking.idProperty());
         parkingType.textProperty().bind(Bindings.createStringBinding(() -> {
             ParkingType type = parking.typeProperty().getValue();
-            return bundle.getString("parking_type." + type.toString());
+            return R.get("parking_type." + type.toString());
         }, parking.typeProperty()));
 
         onAvailableChange(parking.isAvailableProperty().get());

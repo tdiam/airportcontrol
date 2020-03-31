@@ -6,6 +6,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.util.Errors;
 import gr.ntua.ece.medialab.airportcontrol.util.PopupDialog;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
@@ -26,7 +27,6 @@ import java.util.Set;
 
 public class FlightForm implements Initializable {
     private Data data;
-    private ResourceBundle bundle;
 
     @FXML
     TextField idField;
@@ -43,7 +43,6 @@ public class FlightForm implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         data = Data.getInstance();
-        bundle = resources;
         populateServicesField();
 
         SimpleObjectProperty<ObservableMap<String, Flight>> flights = data.flightData().flightMapProperty();
@@ -72,7 +71,7 @@ public class FlightForm implements Initializable {
                         if (item == null) {
                             setText(null);
                         } else {
-                            setText(bundle.getString("airport_service." + item.name()));
+                            setText(R.get("airport_service." + item.name()));
                         }
                     }
                 };
@@ -121,27 +120,28 @@ public class FlightForm implements Initializable {
             }
             clearAll();
         } catch (Errors.FlightFormValidationError e) {
+            data.statusData().setError(e.getMessage());
             showErrorDialog(e.getMessage());
         }
     }
 
     private void showLandingDialog(Flight flight) {
         String id = flight.idProperty().get();
-        String title = bundle.getString("flight_form.dialog.title");
-        String message = String.format(bundle.getString("flight_form.dialog.landing_message"), id,
+        String title = R.get("flight_form.dialog.title");
+        String message = R.get("flight_form.dialog.landing_message", id,
                 flight.parkingProperty().get().idProperty().get());
         showDialog(title, message);
     }
 
     private void showHoldingDialog(Flight flight) {
         String id = flight.idProperty().get();
-        String title = bundle.getString("flight_form.dialog.title");
-        String message = String.format(bundle.getString("flight_form.dialog.holding_message"), id);
+        String title = R.get("flight_form.dialog.title");
+        String message = R.get("flight_form.dialog.holding_message", id);
         showDialog(title, message);
     }
 
     private void showErrorDialog(String message) {
-        String title = bundle.getString("flight_form.dialog.error.title");
+        String title = R.get("flight_form.dialog.error.title");
         showDialog(title, message);
     }
 

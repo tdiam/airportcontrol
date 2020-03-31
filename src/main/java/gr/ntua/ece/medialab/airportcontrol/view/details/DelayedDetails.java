@@ -5,6 +5,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightType;
 import gr.ntua.ece.medialab.airportcontrol.model.PlaneType;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import gr.ntua.ece.medialab.airportcontrol.util.TimeUtil;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class DelayedDetails implements Initializable {
-    private ResourceBundle bundle;
     private Data data;
 
     @FXML
@@ -25,7 +25,6 @@ public class DelayedDetails implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        bundle = resources;
         data = Data.getInstance();
 
         bindFlights();
@@ -33,7 +32,7 @@ public class DelayedDetails implements Initializable {
 
     private void bindFlights() {
         TableColumn<Map.Entry<String, Flight>, String> parkingColumn = new TableColumn<>(
-                bundle.getString("details.parking_col.name"));
+                R.get("details.parking_col.name"));
         parkingColumn.setCellValueFactory(df ->
                 Bindings.createStringBinding(
                     () -> {
@@ -45,7 +44,7 @@ public class DelayedDetails implements Initializable {
                 ));
 
         TableColumn<Map.Entry<String, Flight>, String> idColumn = new TableColumn<>(
-                bundle.getString("details.id_col.name"));
+                R.get("details.id_col.name"));
         idColumn.setCellValueFactory(df ->
                 Bindings.createStringBinding(
                     () -> df.getValue().getValue().idProperty().get(),
@@ -53,29 +52,29 @@ public class DelayedDetails implements Initializable {
                 ));
 
         TableColumn<Map.Entry<String, Flight>, String> flightTypeColumn = new TableColumn<>(
-                bundle.getString("details.flight_type_col.name"));
+                R.get("details.flight_type_col.name"));
         flightTypeColumn.setCellValueFactory(df ->
                 Bindings.createStringBinding(
                     () -> {
                         FlightType flightType = df.getValue().getValue().flightTypeProperty().get();
-                        return bundle.getString("flight_type." + flightType.toString());
+                        return R.get("flight_type." + flightType.toString());
                     },
                     df.getValue().getValue().flightTypeProperty()
                 ));
 
         TableColumn<Map.Entry<String, Flight>, String> planeTypeColumn = new TableColumn<>(
-                bundle.getString("details.plane_type_col.name"));
+                R.get("details.plane_type_col.name"));
         planeTypeColumn.setCellValueFactory(df ->
                 Bindings.createStringBinding(
                     () -> {
                         PlaneType planeType = df.getValue().getValue().planeTypeProperty().get();
-                        return bundle.getString("plane_type." + planeType.toString());
+                        return R.get("plane_type." + planeType.toString());
                     },
                     df.getValue().getValue().planeTypeProperty()
                 ));
 
         TableColumn<Map.Entry<String, Flight>, String> stdColumn = new TableColumn<>(
-                bundle.getString("details.std_col.name"));
+                R.get("details.std_col.name"));
         stdColumn.setCellValueFactory(df ->
                 Bindings.createStringBinding(
                     () -> {

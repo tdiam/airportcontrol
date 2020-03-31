@@ -1,0 +1,20 @@
+/**
+ * Statusbar styles.
+ * Paddings are chosen to be the same as in menubar:
+ * https://gist.github.com/maxd/63691840fc372f22f470
+ */
+
+#statusbar {
+    -fx-background-color: #DDD;
+    -fx-padding: 0.0em 0.666667em 0.0em 0.666667em;
+    -fx-pref-height: 30;
+}
+
+#statusbar > * {
+    -fx-alignment: center-left;
+    -fx-padding: 0.333em 0.5em 0.333em 0.5em;
+}
+
+#statusMessage.error {
+    -fx-text-fill: #d62c1a;
+}

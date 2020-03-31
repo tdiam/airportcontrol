@@ -93,6 +93,14 @@ public class TimeData {
     }
 
     /**
+     * Returns the scheduler service.
+     * @return A ScheduledExecutorService instance.
+     */
+    public ScheduledExecutorService getScheduler() {
+        return scheduler;
+    }
+
+    /**
      * {@code runIfPast} defaults to {@code false}.
      *
      * @see TimeData#schedule(Runnable, long, boolean)

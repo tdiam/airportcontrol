@@ -6,6 +6,7 @@ import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
 import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -129,9 +130,7 @@ public class AirportData {
                         imported.put(parking.idProperty().get(), parking);
                     }
                 } catch (NumberFormatException e) {
-                    String msg = new StringBuilder().append(file).append(":").append(lineNum)
-                            .append(" could not be parsed").toString();
-                    System.err.println(msg);
+                    root.statusData().setError(R.get("errors.parse_imported", file, lineNum));
                 }
                 ++lineNum;
             }
@@ -182,6 +181,12 @@ public class AirportData {
         }
 
         if (!accepted) {
+            root.statusData().setStatus(R.get(
+                "status.flight_status",
+                flight.idProperty().get(),
+                R.get("flight_status." + flight.statusProperty().get().toString()),
+                R.get("flight_status." + FlightStatus.HOLDING.toString())
+            ));
             flight.statusProperty().set(FlightStatus.HOLDING);
         }
     }
@@ -197,6 +202,12 @@ public class AirportData {
 
         parking.parkedFlightProperty().set(flight);
         flight.parkingProperty().set(parking);
+        root.statusData().setStatus(R.get(
+            "status.flight_status",
+            flight.idProperty().get(),
+            R.get("flight_status." + flight.statusProperty().get().toString()),
+            R.get("flight_status." + FlightStatus.LANDING.toString())
+        ));
         flight.statusProperty().set(FlightStatus.LANDING);
 
         int landWhen = now + flight.getLandingTime();
@@ -204,6 +215,12 @@ public class AirportData {
 
         // Schedule landing
         root.timeData().schedule(() -> {
+            root.statusData().setStatus(R.get(
+                "status.flight_status",
+                flight.idProperty().get(),
+                R.get("flight_status." + flight.statusProperty().get().toString()),
+                R.get("flight_status." + FlightStatus.PARKED.toString())
+            ));
             flight.statusProperty().set(FlightStatus.PARKED);
             flight.parkedTimeProperty().set(landWhen);
         }, landWhen);
@@ -259,6 +276,8 @@ public class AirportData {
         // Remove flight
         flight.parkingProperty().get().parkedFlightProperty().set(null);
         root.flightData().flightMapProperty().get().remove(flight.idProperty().get());
+
+        root.statusData().setStatus(R.get("status.takeoff", flight.idProperty().get(), totalCost));
 
         checkHolding(flight.parkingProperty().get());
         return true;

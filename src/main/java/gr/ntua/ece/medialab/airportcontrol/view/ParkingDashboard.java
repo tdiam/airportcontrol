@@ -2,6 +2,7 @@ package gr.ntua.ece.medialab.airportcontrol.view;
 
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableMap;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 public class ParkingDashboard implements Initializable {
     private Data data;
     SimpleListProperty<Map.Entry<String, ParkingBase>> parkings;
-    private ResourceBundle bundle;
 
     @FXML
     GridPane parkingDashboard;
@@ -31,7 +31,6 @@ public class ParkingDashboard implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         data = Data.getInstance();
         parkings = data.airportData().getParkings();
-        bundle = resources;
 
         populateDashboard();
         parkings.addListener((obs, oldValue, newValue) -> populateDashboard());
@@ -39,6 +38,8 @@ public class ParkingDashboard implements Initializable {
 
     private void populateDashboard() {
         int N_COLS = 5;
+
+        parkingDashboard.getChildren().clear();
 
         List<Map.Entry<String, ParkingBase>> parkingList = parkings.get();
 
@@ -52,7 +53,7 @@ public class ParkingDashboard implements Initializable {
 
     private Parent loadParkingItem(ParkingBase parking) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("parkingItem.fxml"), bundle);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("parkingItem.fxml"), R.getBundle());
             Parent view = loader.load();
             loader.<ParkingItem>getController().initItemData(parking);
             return view;

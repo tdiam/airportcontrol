@@ -11,6 +11,7 @@ public class Data {
     private static TimeData timeInstance;
     private static FlightData flightInstance;
     private static AirportData airportInstance;
+    private static StatusData statusInstance;
 
     /**
      * Gets the singleton instance.
@@ -22,6 +23,7 @@ public class Data {
             timeInstance = new TimeData(instance);
             flightInstance = new FlightData(instance);
             airportInstance = new AirportData(instance);
+            statusInstance = new StatusData(instance);
         }
         return instance;
     }
@@ -34,6 +36,7 @@ public class Data {
         try {
             return new File("./medialab/").getCanonicalPath();
         } catch (IOException e) {
+            statusData().setError("Scenario directory not found");
             throw new RuntimeException(e);
         }
     }
@@ -60,5 +63,13 @@ public class Data {
      */
     public AirportData airportData() {
         return airportInstance;
+    }
+
+    /**
+     * Gets the status data controller instance.
+     * @return {@link StatusData} instance.
+     */
+    public StatusData statusData() {
+        return statusInstance;
     }
 }

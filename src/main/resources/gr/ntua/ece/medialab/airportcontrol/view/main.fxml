@@ -34,4 +34,8 @@
             </rowConstraints>
         </GridPane>
     </center>
+    <bottom>
+        <fx:include fx:id="statusbar" source="statusbar.fxml"
+                resources="gr.ntua.ece.medialab.airportcontrol.bundle" />
+    </bottom>
 </BorderPane>

@@ -3,6 +3,7 @@ package gr.ntua.ece.medialab.airportcontrol.data;
 import gr.ntua.ece.medialab.airportcontrol.model.*;
 import gr.ntua.ece.medialab.airportcontrol.util.MapEntry;
 import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleListProperty;
@@ -112,9 +113,7 @@ public class FlightData {
                     Flight flight = arrayToFlight(values);
                     imported.put(flight.idProperty().get(), flight);
                 } catch (NumberFormatException e) {
-                    String msg = new StringBuilder().append(file).append(":").append(lineNum)
-                            .append(" could not be parsed").toString();
-                    System.err.println(msg);
+                    root.statusData().setError(R.get("errors.parse_imported", file, lineNum));
                 }
                 ++lineNum;
             }
