@@ -12,7 +12,7 @@
     <Menu text="%nav.application">
         <MenuItem text="%nav.start" onAction="#startTime" />
         <MenuItem text="%nav.load" onAction="#showLoadDialog" />
-        <MenuItem text="%nav.exit" />
+        <MenuItem text="%nav.exit" onAction="#exit" />
     </Menu>
     <Menu text="%nav.details">
         <MenuItem text="%nav.gates" onAction="#showGatesDetails" />

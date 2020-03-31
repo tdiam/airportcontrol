@@ -2,6 +2,8 @@ package gr.ntua.ece.medialab.airportcontrol.view;
 
 import gr.ntua.ece.medialab.airportcontrol.data.Data;
 import gr.ntua.ece.medialab.airportcontrol.util.PopupDialog;
+import gr.ntua.ece.medialab.airportcontrol.util.R;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,11 +17,9 @@ import java.util.ResourceBundle;
 
 public class Menu implements Initializable {
     private Data data;
-    private ResourceBundle bundle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        bundle = resources;
         data = Data.getInstance();
     }
 
@@ -30,7 +30,7 @@ public class Menu implements Initializable {
 
     @FXML
     void showLoadDialog(Event evt) {
-        String title = bundle.getString("nav.load.title");
+        String title = R.get("nav.load.title");
         Parent view = loadView("load_dialog.fxml");
 
         PopupDialog dialog = new PopupDialog(title, view);
@@ -41,27 +41,27 @@ public class Menu implements Initializable {
 
     @FXML
     void showGatesDetails(Event evt) {
-        showDetailsView(bundle.getString("details.gates.title"), loadView("details/gates.fxml"));
+        showDetailsView(R.get("details.gates.title"), loadView("details/gates.fxml"));
     }
 
     @FXML
     void showFlightsDetails(Event evt) {
-        showDetailsView(bundle.getString("details.flights.title"), loadView("details/flights.fxml"));
+        showDetailsView(R.get("details.flights.title"), loadView("details/flights.fxml"));
     }
 
     @FXML
     void showDelayedDetails(Event evt) {
-        showDetailsView(bundle.getString("details.delayed.title"), loadView("details/delayed.fxml"));
+        showDetailsView(R.get("details.delayed.title"), loadView("details/delayed.fxml"));
     }
 
     @FXML
     void showHoldingDetails(Event evt) {
-        showDetailsView(bundle.getString("details.holding.title"), loadView("details/holding.fxml"));
+        showDetailsView(R.get("details.holding.title"), loadView("details/holding.fxml"));
     }
 
     @FXML
     void showNextDeparturesDetails(Event evt) {
-        showDetailsView(bundle.getString("details.next_departures.title"), loadView("details/next_departures.fxml"));
+        showDetailsView(R.get("details.next_departures.title"), loadView("details/next_departures.fxml"));
     }
 
     void showDetailsView(String title, Parent view) {
@@ -73,9 +73,14 @@ public class Menu implements Initializable {
         stage.centerOnScreen();
     }
 
+    @FXML
+    void exit() {
+        Platform.exit();
+    }
+
     private Parent loadView(String viewFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(viewFile), bundle);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(viewFile), R.getBundle());
             return loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
