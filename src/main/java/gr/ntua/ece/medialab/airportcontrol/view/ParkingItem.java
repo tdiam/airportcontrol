@@ -30,8 +30,8 @@ public class ParkingItem implements Initializable {
     private GridPane parkingItem;
 
     @FXML
-    private Label flightId, flightCity, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd, parkingId,
-            parkingType;
+    private Label flightId, flightCity, available, landing, flightParkedAtLabel, flightParkedAt, flightStdLabel,
+            flightStd, parkingId, parkingType;
 
     @FXML
     private Button takeoffBtn;
@@ -40,6 +40,9 @@ public class ParkingItem implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         data = Data.getInstance();
         bundle = resources;
+
+        List.of(flightId, flightCity, available, landing, flightParkedAtLabel, flightParkedAt, flightStdLabel,
+                flightStd, parkingId, parkingType).forEach(item -> item.managedProperty().bind(item.visibleProperty()));
     }
 
     void initItemData(ParkingBase parking) {
@@ -96,8 +99,9 @@ public class ParkingItem implements Initializable {
             parkingItem.getStyleClass().remove("occupied");
             parkingItem.getStyleClass().remove("landing");
             parkingItem.getStyleClass().add("available");
-            List.of(flightId, flightCity, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd, takeoffBtn)
-                    .forEach(item -> item.setVisible(false));
+            available.setVisible(true);
+            List.of(flightId, flightCity, landing, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd,
+                    takeoffBtn).forEach(item -> item.setVisible(false));
         }
     }
 
@@ -106,12 +110,13 @@ public class ParkingItem implements Initializable {
             parkingItem.getStyleClass().remove("available");
             parkingItem.getStyleClass().remove("occupied");
             parkingItem.getStyleClass().add("landing");
-            List.of(flightId, flightCity, flightStdLabel, flightStd).forEach(item -> item.setVisible(true));
-            List.of(flightParkedAtLabel, flightParkedAt, takeoffBtn).forEach(item -> item.setVisible(false));
+            List.of(flightId, flightCity, landing, flightStdLabel, flightStd).forEach(item -> item.setVisible(true));
+            List.of(available, flightParkedAtLabel, flightParkedAt, takeoffBtn).forEach(item -> item.setVisible(false));
         } else if (status == FlightStatus.PARKED) {
             parkingItem.getStyleClass().remove("available");
             parkingItem.getStyleClass().remove("landing");
             parkingItem.getStyleClass().add("occupied");
+            List.of(available, landing).forEach(item -> item.setVisible(false));
             List.of(flightId, flightCity, flightParkedAtLabel, flightParkedAt, flightStdLabel, flightStd, takeoffBtn)
                     .forEach(item -> item.setVisible(true));
         }

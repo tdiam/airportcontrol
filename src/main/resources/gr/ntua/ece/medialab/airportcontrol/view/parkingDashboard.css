@@ -46,7 +46,7 @@
     -fx-alignment: center-left;
 }
 
-#parkedAt .label {
+#landing, #parkedAt .label {
     -fx-text-fill: #555555;
 }
 

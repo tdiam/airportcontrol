@@ -14,8 +14,10 @@
         fx:controller="gr.ntua.ece.medialab.airportcontrol.view.ParkingItem"
         stylesheets="@parkingDashboard.css">
     <Label fx:id="flightId" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3" />
-    <Label fx:id="flightCity" GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.columnSpan="6" />
+    <Label fx:id="flightCity" GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.columnSpan="9" />
     <VBox fx:id="mainInfo" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="12">
+        <Label fx:id="available" styleClass="" text="%parking_item.available" />
+        <Label fx:id="landing" text="%parking_item.landing" />
         <HBox fx:id="parkedAt">
             <Label fx:id="flightParkedAtLabel" text="%parking_item.parked_at" />
             <Label fx:id="flightParkedAt" />
