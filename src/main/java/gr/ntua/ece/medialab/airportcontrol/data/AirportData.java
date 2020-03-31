@@ -208,7 +208,7 @@ public class AirportData {
         // Schedule landing
         root.timeData().schedule(() -> {
             flight.statusProperty().set(FlightStatus.PARKED);
-            flight.parkedTimeProperty().set(now);
+            flight.parkedTimeProperty().set(landWhen);
         }, landWhen);
 
         // If flight will land before std, schedule marking as next departure
