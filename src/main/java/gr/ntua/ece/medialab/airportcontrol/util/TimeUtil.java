@@ -1,6 +1,10 @@
 package gr.ntua.ece.medialab.airportcontrol.util;
 
-public class TimeUtil {/**
+/**
+ * Time utilities.
+ */
+public class TimeUtil {
+    /**
      * Converts an integer number of minutes to the duration in hh:mm string format.
      * @param minutes Number of minutes.
      * @return String that represents the duration in hh:mm format.

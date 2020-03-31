@@ -4,9 +4,12 @@ import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX event utilities.
+ */
 public class EventUtil {
     /**
-     * Source:
+     * Adapted from:
      * https://stackoverflow.com/a/53908008
      *
      * @param evt JavaFX event.

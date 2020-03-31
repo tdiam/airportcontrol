@@ -102,7 +102,6 @@ public class TimeData {
 
     /**
      * {@code runIfPast} defaults to {@code false}.
-     *
      * @see TimeData#schedule(Runnable, long, boolean)
      */
     public ScheduledFuture<?> schedule(Runnable command, long when) {

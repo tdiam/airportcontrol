@@ -160,11 +160,10 @@ public class AirportData {
 
     /**
      * Handles landing requests for flights.
-     *
+     * <p>
      * Searches parking for a requesting flight that meets the requirements.
      * If found, the flight starts landing and the parking is assigned to it.
      * Otherwise, the flight's status is set to HOLDING.
-     *
      * @param flight Flight instance.
      */
     public void requestLanding(Flight flight) {
@@ -193,7 +192,6 @@ public class AirportData {
 
     /**
      * Park flight.
-     *
      * @param flight Flight instance.
      * @param parking ParkingBase instance.
      */
@@ -240,9 +238,8 @@ public class AirportData {
 
     /**
      * Handles takeoffs.
-     *
+     * <p>
      * Checks if flight can takeoff and calculates the charge.
-     *
      * @param flight Flight instance.
      * @return true if takeoff was successful, otherwise false.
      */
