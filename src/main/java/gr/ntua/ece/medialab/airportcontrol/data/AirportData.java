@@ -4,7 +4,6 @@ import gr.ntua.ece.medialab.airportcontrol.model.Flight;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightParkedStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.FlightStatus;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingBase;
-import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingGate;
 import gr.ntua.ece.medialab.airportcontrol.model.parking.ParkingType;
 import gr.ntua.ece.medialab.airportcontrol.util.ObservableUtil;
 import javafx.beans.Observable;
@@ -13,8 +12,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -173,7 +170,7 @@ public class AirportData {
      */
     public void requestLanding(Flight flight) {
         boolean accepted = false;
-        SimpleIntegerProperty timeProp = root.timeData().minutesSinceStartProperty();
+        SimpleIntegerProperty timeProp = root.timeData().timeProperty();
         int now = timeProp.get();
         flight.landingRequestTimeProperty().set(now);
         for (ParkingBase parking : parkingMap.get().values()) {
@@ -196,7 +193,7 @@ public class AirportData {
      * @param parking ParkingBase instance.
      */
     public void park(Flight flight, ParkingBase parking) {
-        int now = root.timeData().minutesSinceStartProperty().get();
+        int now = root.timeData().timeProperty().get();
 
         parking.parkedFlightProperty().set(flight);
         flight.parkingProperty().set(parking);
@@ -215,7 +212,7 @@ public class AirportData {
         if (landWhen <= std) {
             root.timeData().schedule(() -> {
                 flight.parkedStatusProperty().set(FlightParkedStatus.NEXT_DEPARTURE);
-            }, std - 10 + 1, true);
+            }, std - 10, true);
         }
 
         // Schedule marking as delayed
@@ -239,7 +236,7 @@ public class AirportData {
             return false;
         }
 
-        int now = root.timeData().minutesSinceStartProperty().get();
+        int now = root.timeData().timeProperty().get();
         // Time since parked
         int duration = now - flight.parkedTimeProperty().get();
 
@@ -271,7 +268,7 @@ public class AirportData {
      * Handles reallocation of parking to holding flights after a takeoff.
      */
     public void checkHolding(ParkingBase parking) {
-        int now = root.timeData().minutesSinceStartProperty().get();
+        int now = root.timeData().timeProperty().get();
 
         List<Map.Entry<String, Flight>> holdingFlights = root.flightData().getHoldingFlights().get();
         for (Map.Entry<String, Flight> entry : holdingFlights) {

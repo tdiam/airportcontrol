@@ -1,6 +1,8 @@
 package gr.ntua.ece.medialab.airportcontrol.data;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.concurrent.Executors;
@@ -13,11 +15,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeData {
     private Data root;
-    private int clockIntervalMs = 500; // Every 5 seconds increase by 1 minute
+    private int clockIntervalMs = 5000; // Every 5 seconds increase by 1 minute
+    private int clockResolution = 10; // This must be a divisor of clockIntervalMs so that time is measured correctly
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> scheduleHandler;
 
-    private SimpleIntegerProperty minutesSinceStart = new SimpleIntegerProperty(0);
+    private SimpleDoubleProperty fractionalTime = new SimpleDoubleProperty(0.0);
+    private SimpleIntegerProperty time = new SimpleIntegerProperty();
 
     /**
      * Creates a new instance of the time data controller.
@@ -25,6 +29,7 @@ public class TimeData {
      */
     TimeData(Data root) {
         this.root = root;
+        this.time.bind(Bindings.createIntegerBinding(() -> (int)fractionalTime.get(), fractionalTime));
     }
 
     /**
@@ -40,15 +45,26 @@ public class TimeData {
      * @param clockIntervalMs New clock interval in milliseconds.
      */
     public void setClockIntervalMs(int clockIntervalMs) {
+        // TODO: This won't fix the timing of scheduled tasks
         this.clockIntervalMs = clockIntervalMs;
+        stop();
+        start();
+    }
+
+    /**
+     * Gets the minutes since the scenario execution started, in full resolution.
+     * @return Double property.
+     */
+    public SimpleDoubleProperty fractionalTimeProperty() {
+        return fractionalTime;
     }
 
     /**
      * Gets the minutes since the scenario execution started.
-     * @return Property that stores the minutes since start.
+     * @return Integer property.
      */
-    public SimpleIntegerProperty minutesSinceStartProperty() {
-        return minutesSinceStart;
+    public SimpleIntegerProperty timeProperty() {
+        return time;
     }
 
     /**
@@ -58,15 +74,15 @@ public class TimeData {
         final Runnable task = () -> {
             Platform.runLater(this::step);
         };
-        scheduleHandler = scheduler.scheduleAtFixedRate(task, clockIntervalMs, clockIntervalMs,
-                TimeUnit.MILLISECONDS);
+        int stepMs = clockIntervalMs / clockResolution;
+        scheduleHandler = scheduler.scheduleAtFixedRate(task, stepMs, stepMs, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * Proceeds the clock by one minute.
+     * Proceeds the clock by one step (1 / resolution of a minute).
      */
     public void step() {
-        minutesSinceStart.set(minutesSinceStart.get() + 1);
+        fractionalTime.set(fractionalTime.get() + (double)1 / clockResolution);
     }
 
     /**
@@ -93,8 +109,8 @@ public class TimeData {
      * @return A ScheduledFuture instance.
      */
     public ScheduledFuture<?> schedule(Runnable command, long when, boolean runIfPast) {
-        // TODO: The delay may be longer than necessary, since the schedule is not synced with the tick schedule.
-        long delay = (when - minutesSinceStart.get()) * clockIntervalMs;
+        // NOTE: The delay is not exactly right due to rounding errors and depending on the resolution
+        long delay = (int)((when - fractionalTime.get()) * clockIntervalMs);
         if (delay < 0) {
             if (runIfPast) {
                 command.run();

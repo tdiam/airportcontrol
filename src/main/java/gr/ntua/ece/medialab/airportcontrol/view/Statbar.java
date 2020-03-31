@@ -68,7 +68,7 @@ public class Statbar implements Initializable {
     }
 
     private void bindTotalTime() {
-        SimpleIntegerProperty prop = data.timeData().minutesSinceStartProperty();
+        SimpleIntegerProperty prop = data.timeData().timeProperty();
 
         totalTime.textProperty().bind(
                 Bindings.createStringBinding(() -> TimeUtil.minutesToHM(prop.get()), prop));
